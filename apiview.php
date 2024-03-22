@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display FROM API</title>
+    <title>Display Data from API</title>
     <style>
         table {
             border-collapse: collapse;
@@ -22,16 +22,11 @@
     </style>
 </head>
 <body>
-    
-    <h1>I have to enter business id and Nicole set my id to <span style = 'background-color:yellow'>1</span></h1>
+    <h1>I have to enter business id and Eddy set my id to <span style = 'background-color:yellow'>1</span></h1>
     <label for="userIdInput">Enter your Business Id:</label>
     <input type="text" id="userIdInput">
     <button onclick="getData()">Get Data</button>
     <div id="dataContainer"></div>
-
-
-
-    
 
     <script>
         function getData() {
@@ -42,13 +37,12 @@
             var xhr = new XMLHttpRequest();
 
             // Configure the request
-            xhr.open('GET', 'https://photohub-be8962501b72.herokuapp.com/api.php/photoapp/api.php?user='+userId, true);
+            xhr.open('GET', 'https://mentormatch-d34df610255f.herokuapp.com/api/accessdata.php?user=' + userId, true);
 
             // Define the callback function to handle the response
             xhr.onload = function() {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     // Parse the JSON response
-                
                     var data = JSON.parse(xhr.responseText);
 
                     // Handle data received from API
@@ -70,16 +64,17 @@
 
         // Function to display data in a table
         function displayData(data) {
-            
             // Construct HTML for table
             var html = '<table>';
-            html += '<tr><th>Product Id</th><th>Product</th><th>Quantity</th><th>Price per Unit</th></tr>';
+            html += '<tr><th>First Name</th><th>Last Name</th><th>Ingredient</th><th>Created At</th><th>Status</th><th>Quantity</th></tr>';
             data.forEach(item => {
                 html += '<tr>' +
-                        '<td>' + item.ProduceID + '</td>' +
-                        '<td>' + item.Name + '</td>' +
-                        '<td>' + item.Quantity + '</td>' +
-                        '<td>' + item.Price + '</td>' +
+                        '<td>' + item.firstname + '</td>' +
+                        '<td>' + item.lastname + '</td>' +
+                        '<td>' + item.name + '</td>' +
+                        '<td>' + item.createdat + '</td>' +
+                        '<td>' + item.status + '</td>' +
+                        '<td>' + item.quantity + '</td>' +
                         '</tr>';
             });
             html += '</table>';
@@ -90,7 +85,7 @@
 
         function displayError(){
 
-            var html = '<div><p> Check with the farm, your id is not valid, thanks !</p></d>'
+            var html = '<div><p> Check with Eddy Restaurent, your id is not valid, thanks !</p></d>'
             document.getElementById('dataContainer').innerHTML = html;
 
         }
