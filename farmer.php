@@ -1,5 +1,5 @@
 <?php
-include ('../photoapp/settings/config.php');
+include ('config.php');
 
 
 
