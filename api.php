@@ -1,44 +1,60 @@
+
 <?php
-// Include your database configuration
-include 'config.php';
+include("config.php");
+session_start();
+$user = $_GET['user'];
+$_SESSION['user'] = $user;
 
-// Set headers to allow CORS (Cross-Origin Resource Sharing)
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json');
+// Set headers to allow cross-origin requests (CORS)
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
 
-// Check if CustomerID is provided in the request
-if (isset($_GET['customer_id'])) {
-    // Get the provided CustomerID
-    $customer_id = $_GET['customer_id'];
-
-    // Prepare SQL statement
+if (isset($_SESSION['user'])) {
+    // Fetch data from the database
+    $checkuser="SELECT * FROM Customers where CustomerID='$user'";
+   $execute=$connection->query($checkuser);
+   if ($execute->num_rows > 0){
     $sql = "SELECT * FROM Produce";
 
-    // Execute the SQL query
     $result = $connection->query($sql);
 
-    if ($result === false) {
-        // Query execution failed
-        echo json_encode(array('error' => $connection->error));
-    } else {
-        if ($result->num_rows > 0) {
-            // Customer exists
-            $data=array();
-            while($row=$result->fetch_assoc()){
-                $data[]=$row;
-            }
-
-            echo json_encode($data);
-        } else {
-            // Customer does not exist
-            echo json_encode(array('message' => 'No produce available'));
+    if ($result->num_rows > 0) {
+        // Store fetched data in an array
+        $data = array();
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
         }
-    }
-} else {
-    // No CustomerID provided
-    echo json_encode(array('error' => 'Please provide CustomerID'));
-}
 
-// Close the database connection
-$connection->close();
+        // Encode the data to JSON format
+        $json_response = json_encode($data);
+
+        // Return the JSON response
+        echo $json_response;
+        // Stop execution after sending JSON response
+        exit();
+    } else {
+        // Return error message in JSON format with appropriate HTTP response code
+        http_response_code(404); // Not Found
+        echo json_encode(array("error" => "No data found."));
+        // Stop execution after sending JSON response
+        exit();
+    }
+    
+}else {
+    // Return error message in JSON format with appropriate HTTP response code
+    http_response_code(404); // Not Found
+    echo json_encode(array("error" => "Invalid ID."));
+    // Stop execution after sending JSON response
+    exit();}
+
+    
+    // Close database connection
+    $connection->close();
+} else {
+    // Return error message in JSON format with appropriate HTTP response code
+    http_response_code(401); // Unauthorized
+    echo json_encode(array("error" => "You do not have permission."));
+    // Stop execution after sending JSON response
+    exit();
+}
 ?>

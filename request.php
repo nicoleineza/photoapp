@@ -42,12 +42,13 @@
             var xhr = new XMLHttpRequest();
 
             // Configure the request
-            xhr.open('GET', 'https://photohub-be8962501b72.herokuapp.com/api.php?customer_id='+userId, true);
+            xhr.open('GET', 'http://localhost/photoapp/api.php?user='+userId, true);
 
             // Define the callback function to handle the response
             xhr.onload = function() {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     // Parse the JSON response
+                
                     var data = JSON.parse(xhr.responseText);
 
                     // Handle data received from API
@@ -69,9 +70,10 @@
 
         // Function to display data in a table
         function displayData(data) {
+            
             // Construct HTML for table
             var html = '<table>';
-            html += '<tr><th>First Name</th><th>Last Name</th><th>Ingredient</th><th>Created At</th><th>Status</th><th>Quantity</th></tr>';
+            html += '<tr><th>Product Id</th><th>Product</th><th>Quantity</th><th>Price per Unit</th></tr>';
             data.forEach(item => {
                 html += '<tr>' +
                         '<td>' + item.ProduceID + '</td>' +
