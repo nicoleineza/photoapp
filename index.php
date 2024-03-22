@@ -1,5 +1,5 @@
 <?php
-include ('/config.php');
+include ('../settings/config.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
