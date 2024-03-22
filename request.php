@@ -90,7 +90,7 @@
 
         function displayError(){
 
-            var html = '<div><p> Check with Eddy Restaurent, your id is not valid, thanks !</p></d>'
+            var html = '<div><p> Check with the farm, your id is not valid, thanks !</p></d>'
             document.getElementById('dataContainer').innerHTML = html;
 
         }
