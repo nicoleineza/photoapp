@@ -1,11 +1,7 @@
 <?php
 include ('../photoapp/settings/config.php');
 
-// Check if the connection variable is set
-if (!isset($connection)) {
-    // Connection variable is not set, display an error message
-    die("Error: Database connection is not available.");
-}
+
 
 // Query to fetch produce data
 $sql = "SELECT * FROM Produce";
