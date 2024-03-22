@@ -1,7 +1,7 @@
 <?php
 include ('../settings/config.php');
 // Query to fetch produce data
-$sql = "SELECT Name, Quantity, Price FROM Produce";
+$sql = "SELECT * FROM Produce";
 $result = $connection->query($sql);
 
 if ($result->num_rows > 0) {
