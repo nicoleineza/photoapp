@@ -83,6 +83,7 @@ if (!$connection->query("SHOW TABLES LIKE '$table_name'")->num_rows) {
                     <?php $base64_image = base64_encode($photo['content']); ?>
                     <div class="photo-item" data-photo-id="<?= $photo['id'] ?>">
                         <img src="data:image/jpeg;base64,<?= $base64_image ?>" alt="Portfolio Image">
+                        <!-- Move the buttons inside this div -->
                         <div class="photo-buttons">
                             <button class="delete-btn">Delete</button>
                             <button class="edit-btn">Edit</button>
