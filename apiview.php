@@ -92,8 +92,9 @@
 </head>
 <body>
     
-    <h1>Display Data from API</h1>
-    <h2>I have to enter business id and Eddy set my id to <span class="highlight">1</span></h2>
+    <h1>Eddy Kubwimana & Nicole Ineza</h1>
+    <h2>We have 4 people, you can enter id  <span class="highlight">1,2,3,4</span> to fetch their respective orders</h2>
+    <h2> If the id is not correct, you receive an error message</h2>
     <label for="userIdInput">Enter your Business Id:</label>
     <input type="text" id="userIdInput">
     <button onclick="getData()">Get Data</button>
@@ -113,7 +114,7 @@
                         displayData(data);
                     }
                 } else {
-                    displayError('Error fetching data. Please try again later.');
+                    displayError('Your id is not registered with us, please contact us on + 233599346543');
                 }
             };
             xhr.send();
