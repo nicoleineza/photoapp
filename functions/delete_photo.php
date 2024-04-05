@@ -1,44 +1,43 @@
 <?php
-session_start(); // Start session to access session variables
-
+session_start();
 include("../settings/config.php");
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    // Redirect to login page if user is not logged in
-    header("Location: login.php");
+    // If not logged in, return unauthorized response
+    http_response_code(401);
     exit();
 }
 
-// Check if photo ID is provided
-if (!isset($_POST['photo_id'])) {
-    echo "Error: Photo ID not provided.";
-    exit;
+// Check if photoId is set and is a positive integer
+if (!isset($_POST['photoId']) || !ctype_digit($_POST['photoId'])) {
+    // If photoId is missing or not a positive integer, return bad request response
+    http_response_code(400);
+    exit();
 }
 
-// Get the photo ID from the POST request
-$photo_id = $_POST['photo_id'];
+$photoId = $_POST['photoId'];
 
 // Prepare and execute query to delete the photo from the database
-$query = "DELETE FROM Photographs WHERE id = ?";
+$query = "DELETE FROM Images WHERE id = ? AND photographer_id = ?";
 if ($stmt = $connection->prepare($query)) {
     // Bind parameters
-    $stmt->bind_param("i", $photo_id);
-    
+    $stmt->bind_param("ii", $photoId, $_SESSION['user_id']);
     // Execute the query
     if ($stmt->execute()) {
-        // Photo deleted successfully
-        echo "Photo deleted successfully.";
+        // Deletion successful
+        echo "Photo deleted successfully";
     } else {
-        // Error deleting photo
-        echo "Error deleting photo.";
+        // Error occurred during deletion
+        http_response_code(500);
+        echo "Error deleting photo: " . $connection->error;
     }
-
     // Close statement
     $stmt->close();
 } else {
-    // Error preparing statement
-    echo "Error preparing statement.";
+    // Error preparing query
+    http_response_code(500);
+    echo "Error preparing query: " . $connection->error;
 }
 
 // Close database connection

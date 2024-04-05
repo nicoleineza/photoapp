@@ -1,8 +1,3 @@
-<?php
-
-include_once("../settings/config.php");
-
-
 function fetchPhotographerPhotos($connection, $photographer_id) {
     $photos = array(); // Initialize an empty array to store photos
 
@@ -31,4 +26,3 @@ function fetchPhotographerPhotos($connection, $photographer_id) {
     // Return the array of photos
     return $photos;
 }
-?>

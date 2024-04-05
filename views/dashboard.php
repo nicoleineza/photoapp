@@ -12,7 +12,7 @@
             <div class="logo">Photography Website</div>
             <ul>
                 <li><a href="#">Portfolios</a></li>
-                <li><a href="#">Sessions</a></li>
+                <li><a href="sessions.php">Sessions</a></li>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Contact</a></li>
             </ul>

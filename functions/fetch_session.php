@@ -1,13 +1,10 @@
 <?php
+// Function to fetch photographer's sessions
+function fetchPhotographerSessions($connection, $photographer_id) {
+    $sessions = array(); // Initialize an empty array to store sessions
 
-include_once("../settings/config.php");
-
-
-function fetchPhotographerPhotos($connection, $photographer_id) {
-    $photos = array(); // Initialize an empty array to store photos
-
-    // Prepare and execute query to fetch photos for the given photographer
-    $query = "SELECT * FROM Images WHERE photographer_id = ?";
+    // Prepare and execute query to fetch sessions for the given photographer
+    $query = "SELECT * FROM Sessions WHERE photographer_id = ?";
     if ($stmt = $connection->prepare($query)) {
         // Bind parameters
         $stmt->bind_param("i", $photographer_id);
@@ -16,9 +13,9 @@ function fetchPhotographerPhotos($connection, $photographer_id) {
         // Get result
         $result = $stmt->get_result();
         
-        // Fetch rows and populate photos array
+        // Fetch rows and populate sessions array
         while ($row = $result->fetch_assoc()) {
-            $photos[] = $row;
+            $sessions[] = $row;
         }
 
         // Close statement
@@ -28,7 +25,7 @@ function fetchPhotographerPhotos($connection, $photographer_id) {
         echo "Error preparing query: " . $connection->error;
     }
 
-    // Return the array of photos
-    return $photos;
+    // Return the array of sessions
+    return $sessions;
 }
 ?>
