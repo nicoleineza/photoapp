@@ -1,82 +1,94 @@
-/* Reset some default styles */
-body, ul {
-    margin: 0;
-    padding: 0;
+/* Add your custom styles here */
+
+/* Responsive design */
+@media only screen and (max-width: 768px) {
+    /* Adjust styles for smaller screens */
 }
 
-/* Global styles */
+/* Typography */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    font-family: 'Arial', sans-serif;
+}
+
+h2 {
+    font-family: 'Arial', sans-serif;
+}
+
+/* Color scheme */
+body {
+    background-color: #f8f9fa; /* Light gray */
     color: #333;
 }
 
-header {
-    background-color: #333;
+header, footer {
+    background-color: #343a40; /* Dark gray */
     color: #fff;
-    padding: 20px;
-    text-align: center;
 }
 
-h1 {
-    margin: 0;
+/* Spacing and alignment */
+header, footer {
+    padding: 15px 20px;
 }
 
-main {
-    display: flex;
-    justify-content: space-around;
-    padding: 20px;
-}
-
-section {
-    background-color: #fff;
-    padding: 20px;
-    margin-bottom: 20px;
+/* Styling form elements */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 30%;
-}
-
-section h2 {
-    margin-top: 0;
-}
-
-ul {
-    list-style-type: none;
 }
 
 button {
-    background-color: #333;
+    background-color: #007bff; /* Blue */
     color: #fff;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #555;
+    background-color: #0056b3; /* Darker blue on hover */
 }
 
-footer {
-    background-color: #333;
-    color: #fff;
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
     padding: 20px;
-    text-align: center;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 5px;
+    position: relative;
 }
 
-.footer-links a {
-    color: #fff;
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
     text-decoration: none;
-    margin-right: 20px;
-}
-
-.social-icons a {
-    color: #fff;
-    text-decoration: none;
-    margin-right: 10px;
-}
-
-.social-icons i {
-    font-size: 24px;
+    cursor: pointer;
 }

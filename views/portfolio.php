@@ -1,3 +1,9 @@
+<?php
+include("../settings/config.php");
+include("../functions/fetch_all.php");
+
+$photos = fetchAllPhotosWithPhotographerNames($connection);
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -5,12 +11,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Photographer Portfolios</title>
+  <style>
+    /* Add CSS styles for responsiveness */
+    .portfolio-item img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
   <link rel="stylesheet" href="../css/portfolio.css">
 </head>
 <body>
-  <header>
-    <h1>Photographer Portfolios</h1>
-  </header>
+<header>
+    <div class="user-profile">
+        <!-- Assuming the profile picture is stored in "profile-picture.jpg" -->
+        <img src="profile-picture.jpg" alt="Profile Picture">
+        <span class="username">John Doe</span>
+    </div>
+    <nav>
+        <ul class="navigation-links">
+            <li><a href="pdashboard.php"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="portfolio.php"><i class="fas fa-home"></i> Portfolios</a></li>
+            <li><a href="profile.php"><i class="fas fa-user"></i> Profile</a></li>
+            <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </nav>
+</header>
   <main>
     <section class="filters">
       <label>Filter by:
@@ -33,7 +59,16 @@
       </label>
     </section>
     <section class="portfolio-grid" id="portfolioGrid">
-      <!-- Portfolio items will be dynamically added here -->
+      <?php foreach ($photos as $photo): ?>
+        <div class="portfolio-item" data-category="<?= $photo['category'] ?>">
+          <img src="data:image/jpeg;base64,<?= base64_encode($photo['productImage']) ?>" alt="<?= $photo['productName'] ?>">
+          <h3><?= $photo['productName'] ?></h3>
+          <p>Photographer: <?= $photo['photographer_name'] ?></p>
+          <?php if ($photo['isForSale']): ?>
+            <button class="buy-button">Buy</button>
+          <?php endif; ?>
+        </div>
+      <?php endforeach; ?>
     </section>
     <div class="lightbox" id="lightbox">
       <span class="close-lightbox">&times;</span>
@@ -55,71 +90,44 @@
       </div>
     </div>
   </footer>
-  <script>document.addEventListener("DOMContentLoaded", function() {
-    const filterSelect = document.getElementById("filter");
-    const sortSelect = document.getElementById("sort");
-    const portfolioGrid = document.getElementById("portfolioGrid");
-    const lightbox = document.getElementById("lightbox");
-    const lightboxImage = document.getElementById("lightboxImage");
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const filterSelect = document.getElementById("filter");
+      const sortSelect = document.getElementById("sort");
+      const portfolioGrid = document.getElementById("portfolioGrid");
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightboxImage");
 
-    // Sample portfolio data (replace with your own)
-    const portfolios = [
-      { title: "Photo 1", category: "landscape", image: "image1.jpg" },
-      { title: "Photo 2", category: "portrait", image: "image2.jpg" },
-      { title: "Photo 3", category: "macro", image: "image3.jpg" },
-      // Add more portfolio items as needed
-    ];
-
-    // Function to render portfolio items
-    function renderPortfolio(portfolios) {
-      portfolioGrid.innerHTML = "";
-      portfolios.forEach(portfolio => {
-        const portfolioItem = document.createElement("div");
-        portfolioItem.classList.add("portfolio-item");
-        portfolioItem.innerHTML = `
-          <img src="${portfolio.image}" alt="${portfolio.title}">
-          <h3>${portfolio.title}</h3>
-        `;
-        portfolioItem.addEventListener("click", () => {
-          lightboxImage.src = portfolio.image;
-          lightbox.style.display = "flex";
+      // Function to filter portfolios based on selected category
+      filterSelect.addEventListener("change", function() {
+        const category = this.value;
+        const portfolioItems = portfolioGrid.querySelectorAll(".portfolio-item");
+        portfolioItems.forEach(item => {
+          const itemCategory = item.getAttribute("data-category");
+          if (category === "all" || itemCategory === category) {
+            item.style.display = "block";
+          } else {
+            item.style.display = "none";
+          }
         });
-        portfolioGrid.appendChild(portfolioItem);
       });
-    }
 
-    // Filter portfolios based on selected category
-    filterSelect.addEventListener("change", function() {
-      const category = this.value;
-      const filteredPortfolios = category === "all" ? portfolios : portfolios.filter(portfolio => portfolio.category === category);
-      renderPortfolio(filteredPortfolios);
-    });
-
-    // Sort portfolios based on selected criteria
-    sortSelect.addEventListener("change", function() {
-      const criteria = this.value;
-      const sortedPortfolios = [...portfolios].sort((a, b) => {
-        if (criteria === "popularity") {
-          // Implement popularity sorting logic
-        } else if (criteria === "date") {
-          // Implement date sorting logic
-        } else if (criteria === "rating") {
-          // Implement rating sorting logic
+      // Function to close lightbox when close button is clicked
+      lightbox.addEventListener("click", function(e) {
+        if (e.target === this || e.target.classList.contains("close-lightbox")) {
+          lightbox.style.display = "none";
         }
       });
-      renderPortfolio(sortedPortfolios);
-    });
 
-    // Close lightbox when close button is clicked
-    lightbox.addEventListener("click", function(e) {
-      if (e.target === this || e.target.classList.contains("close-lightbox")) {
-        lightbox.style.display = "none";
-      }
+      // Add event listener to each portfolio item to display lightbox
+      const portfolioItems = portfolioGrid.querySelectorAll(".portfolio-item");
+      portfolioItems.forEach(item => {
+        item.addEventListener("click", () => {
+          lightboxImage.src = item.querySelector("img").src;
+          lightbox.style.display = "flex";
+        });
+      });
     });
-
-    // Initial rendering of portfolio items
-    renderPortfolio(portfolios);
-  });
   </script>
 </body>
 </html>

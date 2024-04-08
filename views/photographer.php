@@ -28,6 +28,7 @@ $sessions = fetchPhotographerSessions($connection, $photographer_id);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photographer Page</title>
     <link rel="stylesheet" href="../css/photographer.css">
+    <link rel="icon" href="../assets/appicon.png">
     <style>
         /* Add your custom CSS styles here */
     </style>

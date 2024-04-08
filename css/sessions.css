@@ -1,51 +1,54 @@
-body {
-    font-family: Arial, sans-serif;
+body, html {
+    height: 100%;
     margin: 0;
     padding: 0;
 }
 
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 0 20px;
-}
-
-h1 {
-    text-align: center;
-    background-color: #333;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-th {
+body {
+    font-family: Arial, sans-serif;
     background-color: #f2f2f2;
 }
 
-button {
-    padding: 5px 10px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.container {
+    width: 100%;
+    max-width: 1200px; /* Adjust max-width as needed */
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-button:hover {
+header {
     background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: right; /* Align the links to the right */
+}
+
+nav ul li {
+    display: inline;
+    margin-left: 20px; /* Adjust spacing between links */
+}
+
+nav ul li:first-child {
+    margin-left: 0; /* Remove margin for the first link */
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
 }
 
 .filters {
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .filters label {
@@ -55,45 +58,56 @@ button:hover {
 .filters input[type="text"],
 .filters input[type="number"] {
     width: 100px;
-    padding: 5px;
+    margin-right: 10px;
 }
 
-.filters input[type="number"] {
-    width: 60px;
+.filters button {
+    padding: 5px 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+table th {
+    background-color: #f2f2f2;
 }
 
 footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
     background-color: #333;
     color: #fff;
     padding: 20px 0;
     text-align: center;
-  }
-  
-  .footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
+}
+
+.footer-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  .footer-links a {
+}
+
+.footer-links a {
     color: #fff;
     text-decoration: none;
     margin-right: 20px;
-  }
-  
-  .social-icons a {
+}
+
+.social-icons a {
     display: inline-block;
     margin-left: 10px;
-  }
-  
-  .social-icons img {
+}
+
+.social-icons img {
     width: 30px;
     height: 30px;
-  }
-  
-  
+}

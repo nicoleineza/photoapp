@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photography Website</title>
     <link rel="stylesheet" href="../css/dasboard.css">
+    <link rel="icon" href="../assets/appicon.png">
 </head>
 <body>
     <header>

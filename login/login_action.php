@@ -39,7 +39,7 @@ if ($result->num_rows == 0) {
             header("Location: ../views/photographer.php");
             exit();
         } else {
-            header("Location: ../views/dashboard.php");
+            header("Location: ../views/pdashboard.php");
             exit();
         }
     }
