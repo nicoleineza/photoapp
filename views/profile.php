@@ -1,3 +1,25 @@
+<?php
+
+session_start(); // Start the session
+
+include("../settings/auto.php");
+// Retrieve user ID from session
+$user_id = $_SESSION['user_id'];
+
+// Database connection
+include_once('../settings/config.php');
+
+// Retrieve user's information
+$sql_user_info = "SELECT * FROM Users WHERE user_id = ?";
+$stmt_user_info = $connection->prepare($sql_user_info);
+$stmt_user_info->bind_param("i", $user_id);
+$stmt_user_info->execute();
+$result_user_info = $stmt_user_info->get_result();
+
+if ($result_user_info->num_rows > 0) {
+    $user_info = $result_user_info->fetch_assoc();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,22 +30,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="user-profile">
-            <!-- Assuming the profile picture is stored in "profile-picture.jpg" -->
-            <img src="profile-picture.jpg" alt="Profile Picture">
-            <span class="username">John Doe</span>
-        </div>
-        <nav>
-            <ul class="navigation-links">
-                <li><a href="pdashboard.php"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="portfolio.php"><i class="fas fa-image"></i> Portfolios</a></li>
-                <li><a href="profile.php"><i class="fas fa-user"></i> Profile</a></li>
-                <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
-                <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-            </ul>
-        </nav>
-    </header>
+<header>
+    <div class="user-profile">
+    <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
+    </div>
+    <nav>
+        <ul class="navigation-links">
+            <li><a href="pdashboard.php"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="portfolio.php"><i class="fas fa-home"></i> Portfolios</a></li>
+            <li><a href="profile.php"><i class="fas fa-user"></i> Profile</a></li>
+            <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </nav>
+</header>
 
     <div class="edit-profile-container">
         <h2>Edit Profile</h2>
@@ -86,21 +106,6 @@
         </div>
     </div>
 
-    <footer>
-        <div class="footer-container">
-            <div class="footer-links">
-                <a href="#">About Us</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Contact</a>
-            </div>
-            <div class="social-icons">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-        </div>
-    </footer>
 
     <!-- Add the confirmation message modal (initially hidden) -->
     <div id="deleteConfirmationModal" class="modal">

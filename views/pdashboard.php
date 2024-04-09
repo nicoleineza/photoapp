@@ -37,7 +37,19 @@ $stmt_booked_sessions = $connection->prepare($sql_booked_sessions);
 $stmt_booked_sessions->bind_param("i", $user_id);
 $stmt_booked_sessions->execute();
 $result_booked_sessions = $stmt_booked_sessions->get_result();
+
+
+// Fetch notifications for session bookings
+$sql_notifications = "SELECT s.session_name, b.status
+                      FROM Sessions s
+                      INNER JOIN Bookings b ON s.session_id = b.session_id
+                      WHERE b.user_id = ? AND (b.status = 'rejected' OR b.status = 'approved')";
+$stmt_notifications = $connection->prepare($sql_notifications);
+$stmt_notifications->bind_param("i", $user_id);
+$stmt_notifications->execute();
+$result_notifications = $stmt_notifications->get_result();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -45,15 +57,14 @@ $result_booked_sessions = $stmt_booked_sessions->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-jb/2LDVYfH9c6ITrdC39DY/dZ8Jhk0Rtnb2KlFegsBY9tWzVWJASpOn5WTdWRSZ3ZFsmxuT8sZaxEOfgnxlbkA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="icon" href="../assets/appicon.png">
     <link rel="stylesheet" href="../css/pdashboard.css"> 
 </head>
 <body>
     <header>
         <div class="nav-left">
-            <h1><img src="<?php echo $user_info['profile_picture']; ?>" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
+            <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
         </div>
         <nav>
     <ul>
@@ -62,13 +73,31 @@ $result_booked_sessions = $stmt_booked_sessions->get_result();
         <li><a href="sessions.php"><i class="fas fa-home"></i> sessions</a></li>
         <li><a href="profile.php"><i class="fas fa-user"></i> Profile</a></li>
         <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
-        <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
     </ul>
 </nav>
 
     </header>
 
     <div class="main-content">
+    <section id="notifications">
+        <h2>Notifications</h2>
+        <div class="notifications">
+            <?php
+            if ($result_notifications->num_rows > 0) {
+                while ($row_notification = $result_notifications->fetch_assoc()) {
+                $status_message = ($row_notification['status'] == 'rejected') ? 'rejected' : 'approved';
+                echo "<div class='notification'>
+                        <p>Your session booking for '{$row_notification['session_name']}' has been {$status_message}.</p>
+                      </div>";
+                }
+            } else {
+            echo "<p>No new notifications.</p>";
+            }
+            ?>
+        </div>
+    </section>
+
         <section id="featured-photographers">
             <h2>Featured Photographers</h2>
             <div class="photographers-grid">
@@ -82,12 +111,6 @@ $result_booked_sessions = $stmt_booked_sessions->get_result();
                 ?>
             </div>
         </section>
-
-        <section id="book-sessions">
-            <h2>Book Sessions</h2>
-            <a href="sessions.php" class="btn">Book Now</a>
-        </section>
-
         <section id="booked-sessions">
             <h2>Your Booked Sessions</h2>
             <div class="sessions">
@@ -109,22 +132,14 @@ $result_booked_sessions = $stmt_booked_sessions->get_result();
                 ?>
             </div>
         </section>
+
+        <section id="book-sessions">
+            <h2>Book Sessions</h2>
+            <a href="sessions.php" class="btn">Book Now</a>
+        </section>
+
+       
     </div>
 
-    <footer>
-        <div class="footer-container">
-            <div class="footer-links">
-                <a href="#">About Us</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Contact</a>
-            </div>
-            <div class="social-icons">
-                <a href="#"><img src="facebook-icon.png" alt="Facebook"></a>
-                <a href="#"><img src="twitter-icon.png" alt="Twitter"></a>
-                <a href="#"><img src="instagram-icon.png" alt="Instagram"></a>
-            </div>
-        </div>
-    </footer>
 </body>
 </html>

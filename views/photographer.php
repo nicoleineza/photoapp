@@ -3,6 +3,7 @@ session_start(); // Start session to access session variables
 include_once("../settings/config.php");
 include("../functions/fetch_session.php"); 
 include("../functions/fetch_photo.php");
+include("../functions/booking_requests.php");
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -29,38 +30,113 @@ $sessions = fetchPhotographerSessions($connection, $photographer_id);
     <title>Photographer Page</title>
     <link rel="stylesheet" href="../css/photographer.css">
     <link rel="icon" href="../assets/appicon.png">
-    <style>
-        /* Add your custom CSS styles here */
-    </style>
 </head>
 <body>
+<h1 style="
+    font-size: 24px;
+    margin: 0; padding: 10px;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: #ff6f61;
+    text-align: center;
+    position: fixed; /* Make the <h1> fixed */
+    top: 0; /* Align it to the top */
+    left: 0; /* Align it to the left */
+    width: 100%; /* Make it full width */
+    z-index: 1000; /* Ensure it's above other content */
+">Dashboard</h1>
     <header>
-        <h1>Photographer Name</h1>
+    
+        <?php        
+        // Check if user is logged in
+        if (isset($_SESSION['user_id'])) {
+            $photographer_id = $_SESSION['user_id'];
+            
+            // Query to fetch photographer's name based on user ID
+            $query = "SELECT username FROM Users WHERE user_id = ?";
+            $statement = $connection->prepare($query);
+            $statement->bind_param("i", $photographer_id);
+            $statement->execute();
+            $result = $statement->get_result();
+            
+            // Check if the query was successful and if the photographer's name is found
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                // Display the photographer's name
+                echo "<h1>" . $row['username'] . "</h1>";
+            } else {
+                // Display a default message if the photographer's name is not found
+                echo "<h1>Photographer Name</h1>";
+            }
+            
+            // Close the statement
+            $statement->close();
+        } else {
+            // Redirect to login page if user is not logged in
+            header("Location: ../login/login.php");
+            exit();
+        }
+        ?>
         <p>Professional Photographer</p>
-        <!-- Logout button -->
+    
+        <!-- Navigation Section -->
+        
+        <nav>
+            <a href="#bio">Booking</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#sessions">Session Listings</a>
+            
+        </nav>
         <form action="../login/logout.php" method="post">
-            <input type="submit" value="Logout">
+            <input type="submit" value="Logout" style =" margin-left:-60px; margin-bottom:70px;color:white; width:100px; height:50px; background-color:grey;">
         </form>
     </header>
-    <nav>
-        <a href="#bio">Bio</a>
-        <a href="#portfolio">Portfolio</a>
-        <a href="sessions.php">Session Listings</a>
-        <a href="#contact">Contact</a>
-    </nav>
-    <!-- Success message div -->
-    <div id="successMessage" style="display: none; background-color: green; padding: 10px; margin: 10px;">
-        <strong>Success:</strong> Changes saved successfully.
-    </div>
-
+    
+    
+    
+    <!-- Main Content -->
     <div class="container">
         <section id="bio" class="bio">
-            <h2>Bio</h2>
-            <p>Insert photographer's bio here.</p>
+            <h2>Booking Requests</h2>
+            <?php
+            // Fetch booking requests where the session was created by the logged-in photographer
+            $bookingRequests = requests($connection, $photographer_id);
+
+            if (!empty($bookingRequests)) {
+                foreach ($bookingRequests as $booking) {
+                    ?>
+                    <div class="booking">
+                        <p>Booking ID: <?= $booking['booking_id'] ?></p>
+                        <p>Session Name: <?= $booking['session_name'] ?></p>
+                        <p>Date: <?= $booking['date'] ?></p>
+                        <p>Location: <?= $booking['location'] ?></p>
+                        <p>Price: $<?= $booking['price'] ?></p>
+
+                        <!-- Form to change booking status -->
+                        <form action="../functions/status.php" method="post" class="change-status-form">
+                            <input type="hidden" name="booking_id" value="<?= $booking['booking_id'] ?>">
+                            <select name="status">
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                            <input type="submit" value="Change Status">
+                        </form>
+                    </div>
+                    <hr>
+                    <?php
+                }
+            } else {
+                echo "<p>No one has booked any of your sessions.</p>";
+            }
+            ?>
         </section>
+
+        <!-- Portfolio Section -->
         <section id="portfolio">
             <h2>Portfolio</h2>
-            <a href="addphoto.php"><button id="addPhotoBtn">Add New Photo</button></a>
+            <a href="picture.php"><button id="addPhotoBtn">Add New Photo</button></a>
             <div class="portfolio">
                 <!-- Display fetched photos -->
                 <?php if (!empty($photos)): ?>
@@ -89,6 +165,8 @@ $sessions = fetchPhotographerSessions($connection, $photographer_id);
                 <?php endif; ?>
             </div>
         </section>
+
+        <!-- Sessions Section -->
         <section id="sessions" class="session-listings">
             <h2>Session Listings</h2>
             <?php
@@ -120,9 +198,7 @@ $sessions = fetchPhotographerSessions($connection, $photographer_id);
             <a href="addsession.php"><button id="addSessionBtn">Add New Session</button></a>
         </section>
     </div>
-    <footer>
-        &copy; 2024 Photographer Name. All rights reserved.
-    </footer>
+
 
     <!-- Modal for editing photo details -->
     <div id="editPhotoModal" class="modal">
@@ -163,153 +239,7 @@ $sessions = fetchPhotographerSessions($connection, $photographer_id);
         </div>
     </div>
 
-    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-    $(document).ready(function() {
-        // Event listener for edit buttons
-        $(".edit-btn").click(function() {
-            var photoItem = $(this).closest('.photo-item');
-            var photoId = $(this).data('photo-id');
-            var description = photoItem.find('.description').text();
-            var isForSale = photoItem.find('p:contains("This product is for sale")').length > 0 ? 1 : 0;
-            var price = photoItem.find('.price').text().replace("Price: $", "").trim();
-
-            $("#editPhotoId").val(photoId);
-            $("#editDescription").val(description);
-            $("#editIsForSale").val(isForSale);
-            $("#editPrice").val(price);
-
-            $("#editPhotoModal").show();
-        });
-
-        // Event listener for edit session buttons
-        $(".edit-session-btn").click(function() {
-            var sessionId = $(this).data('session-id');
-            var sessionItem = $(".session-item[data-session-id='" + sessionId + "']");
-            var sessionDate = sessionItem.find('p').eq(0).text().replace("Date: ", "").trim();
-            var sessionLocation = sessionItem.find('p').eq(1).text().replace("Location: ", "").trim();
-
-            $("#editSessionId").val(sessionId);
-            $("#editSessionDate").val(sessionDate);
-            $("#editSessionLocation").val(sessionLocation);
-
-            $("#editSessionModal").show();
-        });
-
-        // Submit handler for editing photo form
-        $("#editPhotoForm").submit(function(event) {
-            event.preventDefault();
-            var formData = $(this).serialize();
-
-            $.ajax({
-                url: '../functions/edit_picture.php',
-                type: 'POST',
-                data: formData,
-                success: function(response) {
-                    console.log("Photo details edited:", response);
-                    var photoId = $("#editPhotoId").val();
-                    var photoItem = $(".photo-item[data-photo-id='" + photoId + "']");
-                    var description = $("#editDescription").val();
-                    var price = $("#editPrice").val();
-                    photoItem.find('.description').text(description);
-                    photoItem.find('.price').text("Price: $" + price);
-
-                    // Display success message
-                    $("#successMessage").fadeIn().delay(3000).fadeOut();
-
-                    $("#editPhotoModal").hide();
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error editing photo details:", error);
-                    alert("Error editing photo details. Please try again later.");
-                }
-            });
-        });
-
-        // Submit handler for editing session form
-        $("#editSessionForm").submit(function(event) {
-            event.preventDefault();
-            var formData = $(this).serialize();
-
-            $.ajax({
-                url: '../functions/edit_session.php',
-                type: 'POST',
-                data: formData,
-                success: function(response) {
-                    console.log("Session details edited:", response);
-                    var sessionId = $("#editSessionId").val();
-                    var sessionItem = $(".session-item[data-session-id='" + sessionId + "']");
-                    var sessionDate = $("#editSessionDate").val();
-                    var sessionLocation = $("#editSessionLocation").val();
-                    sessionItem.find('p').eq(0).text("Date: " + sessionDate);
-                    sessionItem.find('p').eq(1).text("Location: " + sessionLocation);
-
-                    // Display success message
-                    $("#successMessage").fadeIn().delay(3000).fadeOut();
-
-                    $("#editSessionModal").hide();
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error editing session details:", error);
-                    alert("Error editing session details. Please try again later.");
-                }
-            });
-        });
-
-        // Event listener for delete buttons
-        $(".delete-btn").click(function() {
-            var photoId = $(this).data('photo-id');
-            if (confirm("Are you sure you want to delete this photo?")) {
-                $.ajax({
-                    url: '../functions/delete_photo.php',
-                    type: 'POST',
-                    data: { photoId: photoId },
-                    success: function(response) {
-                        console.log("Photo deleted:", response);
-                        $(".photo-item[data-photo-id='" + photoId + "']").remove();
-                        // Display success message
-                        $("#successMessage").fadeIn().delay(3000).fadeOut();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error deleting photo:", error);
-                        alert("Error deleting photo. Please try again later.");
-                    }
-                });
-            }
-        });
-
-        // Event listener for delete session buttons
-        $(".delete-session-btn").click(function() {
-            var sessionId = $(this).data('session-id');
-            if (confirm("Are you sure you want to delete this session?")) {
-                $.ajax({
-                    url: '../functions/delete_session.php',
-                    type: 'POST',
-                    data: { sessionId: sessionId },
-                    success: function(response) {
-                        console.log("Session deleted:", response);
-                        $(".session-item[data-session-id='" + sessionId + "']").remove();
-                        // Display success message
-                        $("#successMessage").fadeIn().delay(3000).fadeOut();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error deleting session:", error);
-                        alert("Error deleting session. Please try again later.");
-                    }
-                });
-            }
-        });
-
-        // Event listener for closing modals when clicking outside of them
-        $(window).click(function(event) {
-            if (event.target.className === "modal") {
-                $(".modal").hide();
-            }
-        });
-    });
-    </script>
-
-
+    <script src="../js/photographer.js"></script>
 </body>
 </html>

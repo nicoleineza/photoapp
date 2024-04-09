@@ -1,5 +1,24 @@
 <?php
 
+session_start(); // Start the session
+
+include("../settings/auto.php");
+// Retrieve user ID from session
+$user_id = $_SESSION['user_id'];
+
+// Database connection
+include_once('../settings/config.php');
+
+// Retrieve user's information
+$sql_user_info = "SELECT * FROM Users WHERE user_id = ?";
+$stmt_user_info = $connection->prepare($sql_user_info);
+$stmt_user_info->bind_param("i", $user_id);
+$stmt_user_info->execute();
+$result_user_info = $stmt_user_info->get_result();
+
+if ($result_user_info->num_rows > 0) {
+    $user_info = $result_user_info->fetch_assoc();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,14 +28,12 @@
     <title>Session Listings</title>
     <link rel="icon" href="../assets/appicon.png">
     <link rel="stylesheet" href="../css/sessions.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Include Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 <header>
     <div class="user-profile">
-        <!-- Assuming the profile picture is stored in "profile-picture.jpg" -->
-        <img src="profile-picture.jpg" alt="Profile Picture">
-        <span class="username">John Doe</span>
+    <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
     </div>
     <nav>
         <ul class="navigation-links">
@@ -145,21 +162,7 @@
         </table>
     </div>
 
-    <footer>
-        <div class="footer-container">
-            <div class="footer-links">
-                <a href="#">About Us</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Contact</a>
-            </div>
-            <div class="social-icons">
-                <a href="#"><img src="facebook-icon.png" alt="Facebook"></a>
-                <a href="#"><img src="twitter-icon.png" alt="Twitter"></a>
-                <a href="#"><img src="instagram-icon.png" alt="Instagram"></a>
-            </div>
-        </div>
-    </footer>
+    
     
     <script>
     function bookSession(sessionId) {

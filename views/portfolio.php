@@ -2,42 +2,52 @@
 include("../settings/config.php");
 include("../functions/fetch_all.php");
 
+// Function to fetch comments for a given image ID
+function fetchComments($connection, $imageId) {
+    $sql = "SELECT * FROM Reviews WHERE image_id = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("i", $imageId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $comments = [];
+    while ($row = $result->fetch_assoc()) {
+        $comments[] = $row['comment'];
+    }
+    return $comments;
+}
+
 $photos = fetchAllPhotosWithPhotographerNames($connection);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Photographer Portfolios</title>
-  <style>
-    /* Add CSS styles for responsiveness */
-    .portfolio-item img {
-      max-width: 100%;
-      height: auto;
-    }
-  </style>
+  <!-- External CSS link -->
   <link rel="stylesheet" href="../css/portfolio.css">
 </head>
 <body>
-<header>
+  <!-- Header Section -->
+  <header>
     <div class="user-profile">
-        <!-- Assuming the profile picture is stored in "profile-picture.jpg" -->
-        <img src="profile-picture.jpg" alt="Profile Picture">
-        <span class="username">John Doe</span>
+      <img src="profile-picture.jpg" alt="Profile Picture">
+      <span class="username">John Doe</span>
     </div>
     <nav>
-        <ul class="navigation-links">
-            <li><a href="pdashboard.php"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="portfolio.php"><i class="fas fa-home"></i> Portfolios</a></li>
-            <li><a href="profile.php"><i class="fas fa-user"></i> Profile</a></li>
-            <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
-            <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
+      <ul class="navigation-links">
+        <li><a href="pdashboard.php"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="portfolio.php"><i class="fas fa-home"></i> Portfolios</a></li>
+        <li><a href="profile.php"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
+        <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
     </nav>
-</header>
+  </header>
+
+  <!-- Main Content Section -->
   <main>
+    <!-- Filters Section -->
     <section class="filters">
       <label>Filter by:
         <select id="filter">
@@ -49,6 +59,8 @@ $photos = fetchAllPhotosWithPhotographerNames($connection);
         </select>
       </label>
     </section>
+
+    <!-- Sorting Section -->
     <section class="sorting">
       <label>Sort by:
         <select id="sort">
@@ -58,23 +70,62 @@ $photos = fetchAllPhotosWithPhotographerNames($connection);
         </select>
       </label>
     </section>
+
+    <!-- Portfolio Grid Section -->
     <section class="portfolio-grid" id="portfolioGrid">
       <?php foreach ($photos as $photo): ?>
-        <div class="portfolio-item" data-category="<?= $photo['category'] ?>">
+        <div class="portfolio-item" data-photographer-id="<?= $photo['photographer_id'] ?>" data-image-id="<?= $photo['id'] ?>">
           <img src="data:image/jpeg;base64,<?= base64_encode($photo['productImage']) ?>" alt="<?= $photo['productName'] ?>">
-          <h3><?= $photo['productName'] ?></h3>
-          <p>Photographer: <?= $photo['photographer_name'] ?></p>
-          <?php if ($photo['isForSale']): ?>
-            <button class="buy-button">Buy</button>
-          <?php endif; ?>
+          <div class="portfolio-details">
+            <h3><?= $photo['productName'] ?></h3>
+            <p>Photographer: <?= $photo['photographer_name'] ?></p>
+          </div>
+          <div class="button-container">
+            <?php if ($photo['isForSale']): ?>
+              <button class="buy-button">Buy</button>
+            <?php endif; ?>
+            <button class="review-button">Review Photographer</button>
+            <button class="comments-button">View Comments</button>
+          </div>
+          <div class="comments-container" style="display: none;">
+            <!-- Display comments for this image -->
+            <?php
+            $imageComments = fetchComments($connection, $photo['id']);
+            if (!empty($imageComments)) {
+              foreach ($imageComments as $comment) {
+                echo "<p>$comment</p>";
+              }
+            } else {
+              echo "<p>No comments yet.</p>";
+            }
+            ?>
+          </div>
         </div>
       <?php endforeach; ?>
     </section>
-    <div class="lightbox" id="lightbox">
-      <span class="close-lightbox">&times;</span>
-      <img src="" alt="Full-size Image" id="lightboxImage">
+
+    <!-- Review Form Section -->
+    <div class="review-form-container">
+      <form id="reviewForm" style="display: none;" method="post" action="../functions/review.php">
+        <input type="hidden" id="photographerId" name="photographer_id">
+        <input type="hidden" id="imageId" name="image_id">
+        <label for="rating">Rating:</label>
+        <select id="rating" name="rating">
+          <option value="1">1 Star</option>
+          <option value="2">2 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="5">5 Stars</option>
+        </select>
+        <label for="comment">Comment:</label>
+        <textarea id="comment" name="comment" rows="4"></textarea>
+        <button type="submit">Submit Review</button>
+      </form>
+      <div id="reviewMessage" class="success-message" style="display: none;"></div>
     </div>
   </main>
+
+  <!-- Footer Section -->
   <footer>
     <div class="footer-container">
       <div class="footer-links">
@@ -90,44 +141,8 @@ $photos = fetchAllPhotosWithPhotographerNames($connection);
       </div>
     </div>
   </footer>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const filterSelect = document.getElementById("filter");
-      const sortSelect = document.getElementById("sort");
-      const portfolioGrid = document.getElementById("portfolioGrid");
-      const lightbox = document.getElementById("lightbox");
-      const lightboxImage = document.getElementById("lightboxImage");
 
-      // Function to filter portfolios based on selected category
-      filterSelect.addEventListener("change", function() {
-        const category = this.value;
-        const portfolioItems = portfolioGrid.querySelectorAll(".portfolio-item");
-        portfolioItems.forEach(item => {
-          const itemCategory = item.getAttribute("data-category");
-          if (category === "all" || itemCategory === category) {
-            item.style.display = "block";
-          } else {
-            item.style.display = "none";
-          }
-        });
-      });
-
-      // Function to close lightbox when close button is clicked
-      lightbox.addEventListener("click", function(e) {
-        if (e.target === this || e.target.classList.contains("close-lightbox")) {
-          lightbox.style.display = "none";
-        }
-      });
-
-      // Add event listener to each portfolio item to display lightbox
-      const portfolioItems = portfolioGrid.querySelectorAll(".portfolio-item");
-      portfolioItems.forEach(item => {
-        item.addEventListener("click", () => {
-          lightboxImage.src = item.querySelector("img").src;
-          lightbox.style.display = "flex";
-        });
-      });
-    });
-  </script>
+  <!-- External JavaScript -->
+  <script src="../js/portfolio.js"></script>
 </body>
 </html>

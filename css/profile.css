@@ -5,29 +5,53 @@
     /* Adjust styles for smaller screens */
 }
 
-/* Typography */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
 }
 
-h2 {
-    font-family: 'Arial', sans-serif;
+.container {
+    width: 100%;
+    max-width: 1200px; /* Adjust max-width as needed */
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-/* Color scheme */
-body {
-    background-color: #f8f9fa; /* Light gray */
-    color: #333;
-}
-
-header, footer {
-    background-color: #343a40; /* Dark gray */
+header {
+    background-color:#ff6f61;
     color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* Spacing and alignment */
-header, footer {
-    padding: 15px 20px;
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: right; /* Align the links to the right */
+}
+
+nav ul li {
+    display: inline;
+    margin-left: 20px; /* Adjust spacing between links */
+}
+
+nav ul li:first-child {
+    margin-left: 0; /* Remove margin for the first link */
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
 }
 
 /* Styling form elements */
