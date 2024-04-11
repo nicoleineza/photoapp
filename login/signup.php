@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Signup Page</title>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../css/signup.css">
+<link rel="icon" href="../assets/appicon.png">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
@@ -124,7 +125,8 @@ $(document).ready(function(){
             <label for="non_photographer">No</label>
         </div>
         <button type="submit">Signup</button>
-        <div id="signup_message"></div> <!-- Message container -->
+        <div id="signup_message"></div> 
+        <p>><a href="login.php">have ana account? click here to login</a></p>
     </form>
 </div>
 </body>

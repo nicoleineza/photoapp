@@ -1,31 +1,24 @@
 <?php
 include_once("../settings/config.php");
-// Start session
 session_start();
 include('../settings/auto.php');
 
 try {
-    // Check if user is logged in
-    if(isset($_SESSION['user_id'])) {
-        // Get user ID
-        $userIdToDelete = $_SESSION['user_id'];
 
-        // SQL query to delete the user
+    if(isset($_SESSION['user_id'])) {
+        $userIdToDelete = $_SESSION['user_id'];
         $sql = "DELETE FROM Users WHERE user_id = :user_id";
 
-        // Prepare the statement
-        $stmt = $connection->prepare($sql);
+        $delete = $connection->prepare($sql);
 
         // Execute the query with parameters
-        $stmt->execute(array(':user_id' => $userIdToDelete));
+        $delete->execute(array(':user_id' => $userIdToDelete));
 
-        // Destroy all sessions for the user
         session_unset();
         session_destroy();
 
-        // Redirect to landing page
-        header("Location: ../views/landing.php");
-        exit(); // Stop further execution
+        header("Location: ../login/logout.php");
+        exit(); // 
     } else {
         echo "User not logged in.";
     }
@@ -33,6 +26,5 @@ try {
     echo "Error: " . $e->getMessage();
 }
 
-// Close the connection (assuming $connection is your PDO connection)
 $connection ->close();
 ?>

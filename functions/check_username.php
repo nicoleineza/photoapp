@@ -1,4 +1,6 @@
+
 <?php
+//code to check uniqueness of a username during signup and editing username
 include('../settings/config.php');
 
 if(isset($_POST['username'])){

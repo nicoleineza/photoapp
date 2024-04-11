@@ -22,9 +22,9 @@ if(isset($_POST['username'], $_POST['email'], $_POST['password'], $_POST['user_t
         // Insert data into database
         $query = "INSERT INTO Users (username, email, password_hash, user_type) VALUES ('$username', '$email', '$password_hash', '$user_type')";
         if(mysqli_query($connection, $query)){
-            echo "success"; // Signup successful
+            echo "success"; 
         }else{
-            echo "Error: " . mysqli_error($connection); // Signup failed
+            echo "Error: " . mysqli_error($connection); 
         }
     }
 }

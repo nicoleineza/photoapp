@@ -30,20 +30,7 @@ if ($result_user_info->num_rows > 0) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-<header>
-    <div class="user-profile">
-    <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
-    </div>
-    <nav>
-        <ul class="navigation-links">
-            <li><a href="pdashboard.php"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="portfolio.php"><i class="fas fa-home"></i> Portfolios</a></li>
-            <li><a href="profile.php"><i class="fas fa-user"></i> Profile</a></li>
-            <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
-            <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
-    </nav>
-</header>
+
 
     <div class="edit-profile-container">
         <h2>Edit Profile</h2>
@@ -117,6 +104,7 @@ if ($result_user_info->num_rows > 0) {
             <div id="deletionStatusMessage"></div>
         </div>
     </div>
+    <script src="../js/profile.js"></script>
 
 </body>
 </html>

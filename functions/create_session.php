@@ -5,14 +5,12 @@ include("../settings/config.php");
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    // Redirect to login page if user is not logged in
     header("Location: login.php");
     exit();
 }
 
 $photographer_id = $_SESSION['user_id'];
 
-// Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate and sanitize input data
     $session_name = trim($_POST["session_name"]);
@@ -21,14 +19,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $location = trim($_POST["location"]);
     $price = trim($_POST["price"]);
 
-    // Insert session into database
+    
     $query = "INSERT INTO Sessions (photographer_id, session_name, description, date, location, price) VALUES (?, ?, ?, ?, ?, ?)";
-    if ($stmt = $connection->prepare($query)) {
-        // Bind parameters
-        $stmt->bind_param("issssd", $photographer_id, $session_name, $description, $date, $location, $price);
+    if ($listing = $connection->prepare($query)) {
+        $listing->bind_param("issssd", $photographer_id, $session_name, $description, $date, $location, $price);
         
         // Attempt to execute the prepared statement
-        if ($stmt->execute()) {
+        if ($listing->execute()) {
             // Redirect to sessions page with success message
             header("Location: ../views/photographer.php?success=1");
             exit();
@@ -39,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Close statement
-        $stmt->close();
+        $listing->close();
     }
 }
 

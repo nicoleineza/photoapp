@@ -4,17 +4,16 @@ include_once("../settings/config.php");
 
 
 function fetchPhotographerPhotos($connection, $photographer_id) {
-    $photos = array(); // Initialize an empty array to store photos
+    $photos = array(); 
 
-    // Prepare and execute query to fetch photos for the given photographer
     $query = "SELECT * FROM Images WHERE photographer_id = ?";
-    if ($stmt = $connection->prepare($query)) {
+    if ($image = $connection->prepare($query)) {
         // Bind parameters
-        $stmt->bind_param("i", $photographer_id);
+        $image->bind_param("i", $photographer_id);
         // Execute the query
-        $stmt->execute();
+        $image->execute();
         // Get result
-        $result = $stmt->get_result();
+        $result = $image->get_result();
         
         // Fetch rows and populate photos array
         while ($row = $result->fetch_assoc()) {
@@ -22,7 +21,7 @@ function fetchPhotographerPhotos($connection, $photographer_id) {
         }
 
         // Close statement
-        $stmt->close();
+        $image->close();
     } else {
         // Print error message if the query preparation fails
         echo "Error preparing query: " . $connection->error;

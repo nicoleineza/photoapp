@@ -30,21 +30,7 @@ if ($result_user_info->num_rows > 0) {
     <link rel="stylesheet" href="../css/sessions.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
-<body>
-<header>
-    <div class="user-profile">
-    <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
-    </div>
-    <nav>
-        <ul class="navigation-links">
-            <li><a href="pdashboard.php"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="portfolio.php"><i class="fas fa-home"></i> Portfolios</a></li>
-            <li><a href="profile.php"><i class="fas fa-user"></i> Profile</a></li>
-            <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
-            <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
-    </nav>
-</header>
+<body><<div id="main-content">
 
     <div class="container">
         <h1>Session Listings</h1>
@@ -67,20 +53,9 @@ if ($result_user_info->num_rows > 0) {
                 <th>Location</th>
                 <th>Price</th>
                 <th>Photographer</th>
-                <th></th> <!-- New column for the book button -->
+                <th></th>
             </tr>
-            <!-- PHP code to fetch active session data from the database -->
             <?php
-            session_start(); // Start the session
-
-            // Database connection
-            include_once('../settings/config.php');
-
-            // Check connection
-            if ($connection->connect_error) {
-                die("Connection failed: " . $connection->connect_error);
-            }
-
             $current_date = date("Y-m-d");
             $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
             $sql_active_sessions = "SELECT s.session_id, s.session_name, s.description, s.date, s.location, s.price, u.username
@@ -113,8 +88,6 @@ if ($result_user_info->num_rows > 0) {
             ?>
         </table>
     </div>
-    
-    <!-- Table to show sessions booked by the user -->
     <div class="container">
         <h2>Sessions Booked by You</h2>
         <table>
@@ -124,13 +97,9 @@ if ($result_user_info->num_rows > 0) {
                 <th>Location</th>
                 <th>Price</th>
                 <th>Photographer</th>
-                <th>Status</th> <!-- New column for the status -->
-                <th>Action</th> <!-- New column for delete button -->
-            </tr>
-            <!-- PHP code to fetch sessions booked by the user -->
+                <th>Status</th>
+                <th>Action</th>
             <?php
-            if (isset($_SESSION['user_id'])) {
-                $user_id = $_SESSION['user_id'];
                 $sql_booked_sessions = "SELECT s.session_name, s.date, s.location, s.price, u.username, b.status, b.booking_id
                                         FROM Sessions s
                                         INNER JOIN Users u ON s.photographer_id = u.user_id
@@ -157,7 +126,7 @@ if ($result_user_info->num_rows > 0) {
                 } else {
                     echo "<tr><td colspan='7'>No sessions booked yet.</td></tr>";
                 }
-            }
+            
             ?>
         </table>
     </div>
@@ -196,5 +165,6 @@ if ($result_user_info->num_rows > 0) {
         xhr.send("booking_id=" + bookingId);
     }
     </script>
+    </div>
 </body>
 </html>

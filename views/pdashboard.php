@@ -62,22 +62,30 @@ $result_notifications = $stmt_notifications->get_result();
     <link rel="stylesheet" href="../css/pdashboard.css"> 
 </head>
 <body>
-    <header>
-        <div class="nav-left">
-            <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
+<header>
+    <div class="nav-left">
+        <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
+    </div>
+    <div class="search-box">
+            <form action="../functions/search.php" method="GET">
+                <input type="text" name="query" placeholder="Search photographers...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
         </div>
-        <nav>
-    <ul>
-        <li><a href="pdashboard.php"><i class="fas fa-home"></i> Home</a></li>
-        <li><a href="portfolio.php"><i class="fas fa-home"></i> Portifolios</a></li>
-        <li><a href="sessions.php"><i class="fas fa-home"></i> sessions</a></li>
-        <li><a href="profile.php"><i class="fas fa-user"></i> Profile</a></li>
-        <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
-        <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-    </ul>
-</nav>
+    <nav>
+        <ul>
+            <li><a href="pdashboard.php?page=pdashboard" id="pdashboard"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="portfolio.php?page=portfolio" id="portfolio"><i class="fas fa-home"></i> Portfolios</a></li>
+            <li><a href="sessions.php?page=sessions" id="sessions"><i class="fas fa-home"></i> Sessions</a></li>
+            <li><a href="profile.php?page=profile" id="profile"><i class="fas fa-user"></i> Profile</a></li>
+        </ul>
+        
+        
+    </nav>
+</header>
 
-    </header>
+
+<div id="content-container">
 
     <div class="main-content">
     <section id="notifications">
@@ -140,6 +148,23 @@ $result_notifications = $stmt_notifications->get_result();
 
        
     </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+    $(document).ready(function() {
+    $('.nav-link').click(function(e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        var url = $(this).attr('href'); // Get the URL from the clicked link
+
+        // Fetch the content of the linked page using AJAX
+        $.get(url, function(data) {
+            $('#content-container').html(data); // Replace the content of the container with the fetched data
+        });
+    });
+});
+
+    </script>
 
 </body>
 </html>

@@ -1,4 +1,5 @@
 <?php
+//this function checks and informs the user if the username they want to signup with doesnot arleady exist
 include('../settings/config.php');
 
 if(isset($_POST['email'])){
