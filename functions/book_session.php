@@ -10,7 +10,6 @@ if(isset($_POST['session_id'])) {
     $sql = "INSERT INTO Bookings (session_id, user_id) VALUES ($session_id, $user_id)";
     if ($connection->query($sql) === TRUE) {
 
-        echo "Session booked successfully!";
     } else {
 
         echo "Error: " . $sql . "<br>" . $connection->error;

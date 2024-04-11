@@ -18,32 +18,59 @@ function fetchComments($connection, $imageId) {
 
 $photos = fetchAllPhotosWithPhotographerNames($connection);
 ?>
+<?php
+
+session_start(); // Start the session
+
+// Retrieve user ID from session
+$user_id = $_SESSION['user_id'];
+
+// Retrieve user's information
+$sql_user_info = "SELECT * FROM Users WHERE user_id = ?";
+$stmt_user_info = $connection->prepare($sql_user_info);
+$stmt_user_info->bind_param("i", $user_id);
+$stmt_user_info->execute();
+$result_user_info = $stmt_user_info->get_result();
+
+if ($result_user_info->num_rows > 0) {
+    $user_info = $result_user_info->fetch_assoc();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Photographer Portfolios</title>
-  <!-- External CSS link -->
   <link rel="stylesheet" href="../css/portfolio.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-  <!-- Header Section -->
   <header>
-    <div class="user-profile">
-      <img src="profile-picture.jpg" alt="Profile Picture">
-      <span class="username">John Doe</span>
+    <div class="nav-left">
+        <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
     </div>
-    <nav>
-      <ul class="navigation-links">
-        <li><a href="pdashboard.php"><i class="fas fa-home"></i> Home</a></li>
-        <li><a href="portfolio.php"><i class="fas fa-home"></i> Portfolios</a></li>
-        <li><a href="profile.php"><i class="fas fa-user"></i> Profile</a></li>
-        <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
-        <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-      </ul>
-    </nav>
+    <div class="search-box">
+        <form action="" method="GET">
+            <input type="text" name="query" placeholder="Search photographers...">
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+    </div>
   </header>
+  <nav class="side-nav">
+    <div class="user-profile">
+        <img src="../assets/profile.png" alt="Profile Picture" class="profile-picture">
+        <p class="username"><?php echo $user_info['username']; ?></p>
+    </div>
+    <ul>
+                <li><a href="pdashboard.php?page=pdashboard" id="pdashboard"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="portfolio.php?page=portfolio" id="portfolio"><i class="fas fa-camera"></i> Portfolios</a></li>
+                <li><a href="sessions.php?page=sessions" id="sessions"><i class="fas fa-check-circle"></i> Sessions</a></li>
+                <li><a href="profile.php?page=profile" id="profile"><i class="fas fa-user"></i> Profile</a></li>
+                <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </nav>
+
 
   <!-- Main Content Section -->
   <main>
@@ -124,25 +151,6 @@ $photos = fetchAllPhotosWithPhotographerNames($connection);
       <div id="reviewMessage" class="success-message" style="display: none;"></div>
     </div>
   </main>
-
-  <!-- Footer Section -->
-  <footer>
-    <div class="footer-container">
-      <div class="footer-links">
-        <a href="#">About Us</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Contact</a>
-      </div>
-      <div class="social-icons">
-        <a href="#"><img src="facebook-icon.png" alt="Facebook"></a>
-        <a href="#"><img src="twitter-icon.png" alt="Twitter"></a>
-        <a href="#"><img src="instagram-icon.png" alt="Instagram"></a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- External JavaScript -->
   <script src="../js/portfolio.js"></script>
 </body>
 </html>

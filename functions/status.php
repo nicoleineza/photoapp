@@ -24,11 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Error updating booking status
             echo "Error updating booking status: " . $statement->error;
         }
-
-        // Close the statement
         $statement->close();
     } else {
-        // Booking ID or status is missing
         echo "Booking ID or status is missing.";
     }
 } else {

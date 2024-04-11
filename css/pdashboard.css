@@ -1,139 +1,153 @@
-/* Reset CSS */
-body, h1, h2, p, ul, li {
+
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
-
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: burlywood;
 }
-
 header {
-    background-color: #ff6f61;
-    color: #fff;
-    padding: 10px 20px;
+    background-color: burlywood;
+    padding: 15px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.nav-left {
-    display: flex;
-    align-items: center;
-}
-
 .nav-left h1 {
-    margin-right: 20px;
-}
-
-.nav-left h1 img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-}
-
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-nav ul li {
-    margin-left: 20px;
-}
-
-nav ul li:first-child {
-    margin-left: 0;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .search-box {
-    flex: 1;
-    text-align: center;
-}
-
-.search-box form {
-    display: inline-block;
+    display: flex;
 }
 
 .search-box input[type="text"] {
-    padding: 10px; /* Increase padding */
+    padding: 8px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    margin-right: 10px; /* Increase margin */
-    width: 300px; /* Increase width */
+    margin-right: 10px;
 }
 
 .search-box button {
-    padding: 10px 20px; /* Increase padding */
-    border-radius: 5px;
+    padding: 8px 12px;
     border: none;
-    background-color: #fff;
-    color: #ff6f61;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
     cursor: pointer;
 }
 
 .search-box button:hover {
-    background-color: #f9f9f9;
+    background-color: #0056b3;
+}
+.side-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    background-color: burlywood;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
 }
 
-.main-content {
+.side-nav .user-profile {
     padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
 }
 
-section {
-    background-color: #fff;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-}
-
-section h2 {
-    margin-bottom: 20px;
-    color: #ff6f61;
-}
-
-.notifications {
-    border: 1px solid #ccc;
-    padding: 20px;
-    border-radius: 5px;
-}
-
-.notification {
+.side-nav .user-profile img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
     margin-bottom: 10px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
 }
 
-.notification p {
-    margin: 0;
-}
-
-.notification p:first-child {
+.side-nav .user-profile .username {
+    font-size: 18px;
     font-weight: bold;
 }
 
-.photographers-grid {
+.side-nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.side-nav ul li {
+    padding: 15px 20px;
+    border-bottom: 1px solid burlywood;
+}
+
+.side-nav ul li a {
+    text-decoration: none;
+    color: #333333;
+    display: block;
+    transition: color 0.3s;
+}
+
+.side-nav ul li a:hover {
+    color: #007bff;
+}
+
+
+#content-container {
+    margin-left: 250px; 
+    padding: 20px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
-.photographer {
-    text-align: center;
+.main-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.photographer img {
-    width: 100%;
-    height: auto;
-    border-radius: 50%;
+.section-container {
+    margin-bottom: 20px;
+}
+
+
+@media screen and (max-width: 768px) {
+    .side-nav {
+        width: 200px;
+    }
+
+    #content-container {
+        margin-left: 200px;
+    }
+
+    .nav-left h1 {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .side-nav {
+        width: 100%;
+        position: relative;
+    }
+
+    #content-container {
+        margin-left: 0;
+        grid-template-columns: 1fr;
+    }
+
+    .nav-left h1 {
+        display: none;
+    }
+
+    .search-box {
+        display: none;
+    }
 }

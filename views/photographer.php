@@ -4,6 +4,7 @@ include_once("../settings/config.php");
 include("../functions/fetch_session.php"); 
 include("../functions/fetch_photo.php");
 include("../functions/booking_requests.php");
+include("../functions/fetch_reviews.php");
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -30,6 +31,7 @@ $sessions = fetchPhotographerSessions($connection, $photographer_id);
     <title>Photographer Page</title>
     <link rel="stylesheet" href="../css/photographer.css">
     <link rel="icon" href="../assets/appicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 <h1 style="
@@ -44,7 +46,7 @@ $sessions = fetchPhotographerSessions($connection, $photographer_id);
     top: 0; /* Align it to the top */
     left: 0; /* Align it to the left */
     width: 100%; /* Make it full width */
-    z-index: 1000; /* Ensure it's above other content */
+    z-index: 1000; 
 ">Dashboard</h1>
     <header>
     
@@ -83,14 +85,16 @@ $sessions = fetchPhotographerSessions($connection, $photographer_id);
         <!-- Navigation Section -->
         
         <nav>
-            <a href="#bio">Booking</a>
-            <a href="#portfolio">Portfolio</a>
-            <a href="#sessions">Session Listings</a>
+        <ul>
+                <li> <a href="photographer.php?photographer"id="pdashboard"><i class="fas fa-plus-circle"></i>Create</a></li>
+                <li><a href="pdashboard.php?page=pdashboard" id="pdashboard"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="picture.php?page=portfolio" id="portfolio"><i class="fas fa-camera"></i> Add Pictures/a></li>
+                <li><a href="addsession.php?page=sessions" id="sessions"><i class="fas fa-check-circle"></i> Create Sessions</a></li>
+                <li><a href="profile.php?page=profile" id="profile"><i class="fas fa-user"></i> Profile</a></li>
+                <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
             
         </nav>
-        <form action="../login/logout.php" method="post">
-            <input type="submit" value="Logout" style =" margin-left:-60px; margin-bottom:70px;color:white; width:100px; height:50px; background-color:grey;">
-        </form>
     </header>
     
     
@@ -135,40 +139,71 @@ $sessions = fetchPhotographerSessions($connection, $photographer_id);
 
         <!-- Portfolio Section -->
         <section id="portfolio">
-            <h2>Portfolio</h2>
-            <a href="picture.php"><button id="addPhotoBtn">Add New Photo</button></a>
-            <div class="portfolio">
-                <!-- Display fetched photos -->
-                <?php if (!empty($photos)): ?>
-                    <?php foreach ($photos as $photo): ?>
-                        <?php $base64_image = base64_encode($photo['productImage']); ?>
-                        <div class="photo-item" data-photo-id="<?= $photo['id'] ?>">
-                            <img src="data:image/jpeg;base64,<?= $base64_image ?>" alt="Portfolio Image">
-                            <!-- Display product name -->
-                            <p class="description"><?= $photo['productName'] ?></p>
-                            <!-- Display sale status and price -->
-                            <?php if ($photo['isForSale'] == 1): ?>
-                                <p>This product is for sale</p>
-                                <p class="price">Price: $<?= $photo['productPrice'] ?></p>
-                            <?php else: ?>
-                                <p>This product is not for sale</p>
-                            <?php endif; ?>
-                            <!-- Edit and delete buttons -->
-                            <div class="buttons">
-                                <button class="edit-btn" data-photo-id="<?= $photo['id'] ?>">Edit</button>
-                                <button class="delete-btn" data-photo-id="<?= $photo['id'] ?>">Delete</button>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p>No photos found.</p>
-                <?php endif; ?>
-            </div>
-        </section>
+    <h2>Portfolio</h2>
+    <a href="picture.php"><button id="addPhotoBtn">Add New Photo</button></a>
+    <div class="portfolio">
+        <!-- Display fetched photos -->
+        <?php if (!empty($photos)): ?>
+            <?php foreach ($photos as $photo): ?>
+                <?php 
+                    $base64_image = base64_encode($photo['productImage']); 
+                    // Fetch reviews associated with the current photo
+                    $reviews = fetchReviewsForImage($connection, $photo['id']);
+                    
+                    // Calculate average rating
+                    $totalRating = 0;
+                    $numReviews = count($reviews);
+                    foreach ($reviews as $review) {
+                        $totalRating += $review['rating'];
+                    }
+                    $averageRating = $numReviews > 0 ? $totalRating / $numReviews : 0;
+                ?>
+                <div class="photo-item" data-photo-id="<?= $photo['id'] ?>">
+                    <img src="data:image/jpeg;base64,<?= $base64_image ?>" alt="Portfolio Image">
+                    <!-- Display product name -->
+                    <p class="description"><?= $photo['productName'] ?></p>
+                    <!-- Display sale status and price -->
+                    <?php if ($photo['isForSale'] == 1): ?>
+                        <p>This product is for sale</p>
+                        <p class="price">Price: $<?= $photo['productPrice'] ?></p>
+                    <?php else: ?>
+                        <p>This product is not for sale</p>
+                    <?php endif; ?>
+                    <!-- Display average rating -->
+                    <p>Average Rating: <?= number_format($averageRating, 1) ?></p>
+                    <!-- Button to show comments -->
+                    <button class="show-comments-btn" data-photo-id="<?= $photo['id'] ?>">Show Comments</button>
+                    <!-- Display comments -->
+                    <div class="comments-container" style="display: none;">
+                        <?php if (!empty($reviews)): ?>
+                            <ul>
+                                <?php foreach ($reviews as $review): ?>
+                                    <li><?= $review['comment'] ?> - Rating: <?= $review['rating'] ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <p>No reviews yet.</p>
+                        <?php endif; ?>
+                    </div>
+                    <!-- Edit and delete buttons -->
+                    <div class="buttons">
+                        <button class="edit-btn" data-photo-id="<?= $photo['id'] ?>">Edit</button>
+                        <button class="delete-btn" data-photo-id="<?= $photo['id'] ?>">Delete</button>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No photos found.</p>
+        <?php endif; ?>
+    </div>
+</section>
+
+
 
         <!-- Sessions Section -->
         <section id="sessions" class="session-listings">
             <h2>Session Listings</h2>
+            <a href="addsession.php"><button id="addSessionBtn">Add New Session</button></a>
             <?php
             // Check if sessions are available
             if (!empty($sessions)) {
@@ -195,7 +230,7 @@ $sessions = fetchPhotographerSessions($connection, $photographer_id);
                 echo "<p>No sessions found.</p>";
             }
             ?>
-            <a href="addsession.php"><button id="addSessionBtn">Add New Session</button></a>
+            
         </section>
     </div>
 
@@ -241,5 +276,19 @@ $sessions = fetchPhotographerSessions($connection, $photographer_id);
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../js/photographer.js"></script>
+    <script>
+        // JavaScript to toggle the visibility of comments when clicking the button
+document.addEventListener('DOMContentLoaded', function() {
+    var buttons = document.querySelectorAll('.show-comments-btn');
+    buttons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var photoId = this.dataset.photoId;
+            var commentsContainer = document.querySelector('.photo-item[data-photo-id="' + photoId + '"] .comments-container');
+            commentsContainer.style.display = commentsContainer.style.display === 'none' ? 'block' : 'none';
+        });
+    });
+});
+
+    </script>
 </body>
 </html>

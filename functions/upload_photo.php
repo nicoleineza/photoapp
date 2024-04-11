@@ -45,8 +45,8 @@ if (isset($_FILES["file"]) && $_FILES["file"]["error"] == 0) {
     // Close statement
     $stmt->close();
 
-    // Success: File uploaded successfully
-    http_response_code(200);
+    // Redirect back to photographer.php with success message
+    header("Location: ../views/photographer.php?success=1");
     exit();
 } else {
     // Error: File upload failed

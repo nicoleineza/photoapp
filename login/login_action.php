@@ -32,7 +32,7 @@ if ($result->num_rows == 0) {
         $_SESSION['user_id'] = $user['user_id'];
         $_SESSION['username'] = $user['username']; // or any other user information you want to store
         $_SESSION['email'] = $user['email'];
-        $_SESSION['is_admin'] = $user['is_admin'];
+        $_SESSION['user_type'] = $user['user_type'];
 
         // Redirect to appropriate page based on user type
         if ($user['user_type'] == 'photographer') {

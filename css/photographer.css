@@ -1,4 +1,9 @@
-/* Body and general styles */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -9,19 +14,17 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding-top: 60px; /* Adjusted to accommodate header height */
-    width:65%;
+    padding-top: 60px; 
+    width: 65%;
     margin-left: 30%;
 }
-
-/* Updated Header Styles */
 header {
     background-color: #ff6f61;
     color: #fff;
     padding: 10px 20px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center align header content */
+    align-items: center;
     position: fixed;
     top: 0;
     left: 0;
@@ -39,32 +42,25 @@ h1 {
     background-color: #ff6f61;
     text-align: center;
 }
-
-/* Updated Navigation Styles */
 nav {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
-    align-items: left; /* Center align nav items */
-    
+    align-items: left;
 }
-
 
 nav a {
     color: #333;
     text-decoration: none;
-    margin-bottom: 10px; /* Adjust spacing between links */
+    margin-bottom: 10px;
     transition: color 0.3s;
-    margin-bottom:50px;
-    font-size:18px;
+    font-size: 18px;
 }
 
 nav a:hover {
     color: white;
-    background-color:burlywood;
+    background-color: burlywood;
 }
-
-/* Main content styles */
 section {
     margin-bottom: 30px;
     padding: 20px;
@@ -117,7 +113,7 @@ h2 {
 .buttons button {
     margin-top: 10px;
     padding: 5px 10px;
-    background-color: #ff6f61;
+    background-color: burlywood;;
     color: #fff;
     border: none;
     border-radius: 3px;
@@ -128,28 +124,26 @@ h2 {
 .buttons button:hover {
     background-color: #ff9e9d;
 }
-
 .modal {
     display: none;
     position: fixed;
-    z-index: 1001; /* Ensure modals are above navigation */
+    z-index: 1001;
     left: 0;
     top: 0;
     width: 100%;
-    max-height: 80%; /* Adjust the maximum height */
+    max-height: 80%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
     background-color: #fff;
-    margin: 15px auto; /* Adjust margin for better appearance */
+    margin: 15px auto;
     padding: 20px;
     border-radius: 5px;
     position: relative;
-    z-index: 1002; /* Ensure modal content is above modal overlay */
+    z-index: 1002;
 }
-
 
 .close {
     position: absolute;

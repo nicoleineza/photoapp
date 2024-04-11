@@ -1,0 +1,233 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+h* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: Arial, sans-serif;
+  background-color: burlywood;
+}
+
+header {
+  background-color: burlywood;
+  padding: 15px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-left h1 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.search-box {
+  display: flex;
+}
+
+.search-box input[type="text"] {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.search-box button {
+  padding: 8px 12px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-box button:hover {
+  background-color: #0056b3;
+}
+.side-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 250px;
+  background-color: burlywood;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-nav .user-profile {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.side-nav .user-profile img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.side-nav .user-profile .username {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.side-nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.side-nav ul li {
+  padding: 15px 20px;
+  border-bottom: 1px solid burlywood;
+}
+
+.side-nav ul li a {
+  text-decoration: none;
+  color: #333333;
+  display: block;
+  transition: color 0.3s;
+}
+
+.side-nav ul li a:hover {
+  color: #007bff;
+}
+main {
+  padding: 20px;
+  margin-left: 250px;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.portfolio-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.portfolio-item img {
+  width: 70%; 
+  height: auto; 
+  transition: transform 0.3s ease;
+}
+
+.portfolio-item:hover img {
+  transform: scale(1.1);
+}
+
+.portfolio-details {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  box-sizing: border-box;
+  transition: bottom 0.3s ease;
+}
+
+.portfolio-item:hover .portfolio-details {
+  bottom: -40px;
+}
+
+.portfolio-details h3, .portfolio-details p {
+  margin: 0;
+  color: #fff;
+}
+
+.button-container {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  transition: bottom 0.3s ease;
+}
+
+.portfolio-item:hover .button-container {
+  bottom: 0;
+}
+
+.buy-button, .review-button, .comments-button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.buy-button {
+  background-color: #4caf50;
+  margin-right: 5px;
+}
+
+.review-button {
+  background-color: #2196f3;
+}
+
+.comments-button {
+  background-color: #ded3cf;
+}
+.review-form-container {
+  margin-top: 20px;
+}
+
+.review-form-container form {
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.review-form-container label, .review-form-container textarea, .review-form-container button {
+  margin-bottom: 10px;
+}
+
+.review-form-container textarea {
+  height: 100px;
+}
+
+.success-message {
+  color: green;
+}
+
+.error-message {
+  color: red;
+}
+
+.comments-container {
+  display: none;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.comments-container p {
+  margin: 5px 0;
+  padding: 0;
+}
+
+.comments-container p:first-child {
+  margin-top: 0;
+}
+
+.comments-container p:last-child {
+  margin-bottom: 0;
+}
+

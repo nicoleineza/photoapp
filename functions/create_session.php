@@ -24,13 +24,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($listing = $connection->prepare($query)) {
         $listing->bind_param("issssd", $photographer_id, $session_name, $description, $date, $location, $price);
         
-        // Attempt to execute the prepared statement
         if ($listing->execute()) {
-            // Redirect to sessions page with success message
             header("Location: ../views/photographer.php?success=1");
             exit();
         } else {
-            // Redirect to sessions page with error message
             header("Location: ../views/photographer.php?error=1");
             exit();
         }
@@ -40,7 +37,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// If form submission fails, redirect back to sessions page
 header("Location: photographer.php");
 exit();
 ?>

@@ -18,14 +18,28 @@ $result_user_info = $stmt_user_info->get_result();
 if ($result_user_info->num_rows > 0) {
     $user_info = $result_user_info->fetch_assoc();
 } else {
-    // Redirect the user to the login page if user information is not found
     header("Location: login.php");
     exit();
 }
 
 // Fetch featured photographers
-$sql_featured_photographers = "SELECT * FROM Users WHERE user_type = 'photographer' ORDER BY RAND() LIMIT 3";
-$result_featured_photographers = $connection->query($sql_featured_photographers);
+// Check if search query is submitted
+if(isset($_GET['query'])) {
+    $search_query = $_GET['query'];
+
+    // Fetch photographers based on search query
+    $sql_search_photographers = "SELECT * FROM Users WHERE user_type = 'photographer' AND username LIKE ? ORDER BY username";
+    $stmt_search_photographers = $connection->prepare($sql_search_photographers);
+    $search_param = "%{$search_query}%";
+    $stmt_search_photographers->bind_param("s", $search_param);
+    $stmt_search_photographers->execute();
+    $result_search_photographers = $stmt_search_photographers->get_result();
+} else {
+    // Fetch featured photographers if no search query is submitted
+    $sql_featured_photographers = "SELECT * FROM Users WHERE user_type = 'photographer' ORDER BY RAND() LIMIT 3";
+    $result_featured_photographers = $connection->query($sql_featured_photographers);
+}
+
 
 // Fetch sessions booked by the user
 $sql_booked_sessions = "SELECT s.session_id, s.session_name, s.description, s.date, s.location, s.price, u.username
@@ -48,6 +62,8 @@ $stmt_notifications = $connection->prepare($sql_notifications);
 $stmt_notifications->bind_param("i", $user_id);
 $stmt_notifications->execute();
 $result_notifications = $stmt_notifications->get_result();
+//to check if the logged in user is a photographer
+$is_photographer = $user_info['user_type'] === 'photographer';
 ?>
 
 
@@ -67,30 +83,37 @@ $result_notifications = $stmt_notifications->get_result();
         <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
     </div>
     <div class="search-box">
-            <form action="../functions/search.php" method="GET">
-                <input type="text" name="query" placeholder="Search photographers...">
-                <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
-        </div>
-    <nav>
-        <ul>
-            <li><a href="pdashboard.php?page=pdashboard" id="pdashboard"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="portfolio.php?page=portfolio" id="portfolio"><i class="fas fa-home"></i> Portfolios</a></li>
-            <li><a href="sessions.php?page=sessions" id="sessions"><i class="fas fa-home"></i> Sessions</a></li>
-            <li><a href="profile.php?page=profile" id="profile"><i class="fas fa-user"></i> Profile</a></li>
-        </ul>
-        
-        
-    </nav>
+        <form action="" method="GET">
+            <input type="text" name="query" placeholder="Search photographers...">
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+    </div>
 </header>
+<nav class="side-nav">
+    <div class="user-profile">
+        <img src="../assets/profile.png" alt="Profile Picture" class="profile-picture">
+        <p class="username"><?php echo $user_info['username']; ?></p>
+    </div>
+    <ul><li>
+            <?php if ($is_photographer): ?>
+                <li><a href="photographer.php?photographer" id="pdashboard"><i class="fas fa-plus-circle"></i> Create</a></button>
+            <?php endif; ?>
+            <a href="pdashboard.php?page=pdashboard" id="pdashboard"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="portfolio.php?page=portfolio" id="portfolio"><i class="fas fa-camera"></i> Portfolios</a></li>
+                <li><a href="sessions.php?page=sessions" id="sessions"><i class="fas fa-check-circle"></i> Sessions</a></li>
+                <li><a href="profile.php?page=profile" id="profile"><i class="fas fa-user"></i> Profile</a></li>
+                <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+</nav>
 
 
 <div id="content-container">
 
     <div class="main-content">
-    <section id="notifications">
-        <h2>Notifications</h2>
-        <div class="notifications">
+        <div class="section-container">
+            <section id="notifications">
+                <h2>Notifications</h2>
+                    <div class="notifications">
             <?php
             if ($result_notifications->num_rows > 0) {
                 while ($row_notification = $result_notifications->fetch_assoc()) {
@@ -104,21 +127,40 @@ $result_notifications = $stmt_notifications->get_result();
             }
             ?>
         </div>
+        
     </section>
+    </div>
+    <div class="section-container">
 
-        <section id="featured-photographers">
-            <h2>Featured Photographers</h2>
-            <div class="photographers-grid">
-                <?php
-                while ($row_featured_photographers = $result_featured_photographers->fetch_assoc()) {
+    <section id="featured-photographers">
+    <h2>Featured Photographers</h2>
+    <div class="photographers-grid">
+        <?php
+        if (isset($result_search_photographers)) {
+            if ($result_search_photographers->num_rows > 0) {
+                while ($row_search_photographers = $result_search_photographers->fetch_assoc()) {
                     echo "<div class='photographer'>
-                            <img src='{$row_featured_photographers['profile_picture']}' alt='Photographer'>
-                            <p>{$row_featured_photographers['username']}</p>
+                            <p>{$row_search_photographers['username']}</p>
+                            <button class='book-session-btn' data-photographer-id='{$row_search_photographers['user_id']}'>Book Session</button>
                           </div>";
                 }
-                ?>
-            </div>
-        </section>
+            } else {
+                echo "<p>No photographers found.</p>";
+            }
+        } else {
+            // Display featured photographers if no search query is submitted
+            while ($row_featured_photographers = $result_featured_photographers->fetch_assoc()) {
+                echo "<div class='photographer'>
+                        <p>{$row_featured_photographers['username']}</p>
+                        <button class='book-session-btn' data-photographer-id='{$row_featured_photographers['user_id']}'>Book Session</button>
+                      </div>";
+            }
+        }
+        ?>
+    </div>
+    </section>
+    </div>
+    <div class="section-container">
         <section id="booked-sessions">
             <h2>Your Booked Sessions</h2>
             <div class="sessions">
@@ -140,7 +182,9 @@ $result_notifications = $stmt_notifications->get_result();
                 ?>
             </div>
         </section>
+            </div>
 
+        <div class="section-container">
         <section id="book-sessions">
             <h2>Book Sessions</h2>
             <a href="sessions.php" class="btn">Book Now</a>
@@ -149,22 +193,22 @@ $result_notifications = $stmt_notifications->get_result();
        
     </div>
     </div>
+            </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script>
+<script>
     $(document).ready(function() {
-    $('.nav-link').click(function(e) {
-        e.preventDefault(); // Prevent default link behavior
+        $('.nav-link').click(function(e) {
+            e.preventDefault(); 
 
-        var url = $(this).attr('href'); // Get the URL from the clicked link
+            var url = $(this).attr('href'); 
 
-        // Fetch the content of the linked page using AJAX
-        $.get(url, function(data) {
-            $('#content-container').html(data); // Replace the content of the container with the fetched data
+            $.get(url, function(data) {
+                $('#content-container').html(data); 
+            });
         });
     });
-});
+</script>
 
-    </script>
 
 </body>
 </html>
