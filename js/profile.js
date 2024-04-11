@@ -13,7 +13,7 @@ $(document).ready(function() {
             console.error("Error fetching user information:", error);
         }
     });
-    
+
     // Function to check if passwords match
     function checkPasswordMatch() {
         var newPassword = $("#new_password").val();
@@ -24,10 +24,10 @@ $(document).ready(function() {
             $("#confirm_password_error").html("");
         }
     }
-    
+
     // Call checkPasswordMatch() on keyup event of confirm new password field
     $("#confirm_new_password").keyup(checkPasswordMatch);
-    
+
     $("#editUsername").click(function() {
         $("#edit_username").show();
     });
@@ -192,6 +192,4 @@ $(document).ready(function() {
             }
         });
     });
-    // Other form submission functions go here...
-
 });
