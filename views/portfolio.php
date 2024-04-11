@@ -24,25 +24,28 @@ $photos = fetchAllPhotosWithPhotographerNames($connection);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Photographer Portfolios</title>
+  <!-- External CSS link -->
   <link rel="stylesheet" href="../css/portfolio.css">
 </head>
 <body>
-<header>
-        <div class="nav-left">
-            <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
-        </div>
-        <nav>
-        <ul>
-            <li><a href="pdashboard.php?page=pdashboard" id="pdashboard"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="portfolio.php?page=portfolio" id="portfolio"><i class="fas fa-home"></i> Portfolios</a></li>
-            <li><a href="sessions.php?page=sessions" id="sessions"><i class="fas fa-home"></i> Sessions</a></li>
-            <li><a href="profile.php?page=profile" id="profile"><i class="fas fa-user"></i> Profile</a></li>
-
-        </ul>
+  <!-- Header Section -->
+  <header>
+    <div class="user-profile">
+      <img src="profile-picture.jpg" alt="Profile Picture">
+      <span class="username">John Doe</span>
+    </div>
+    <nav>
+      <ul class="navigation-links">
+        <li><a href="pdashboard.php"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="portfolio.php"><i class="fas fa-home"></i> Portfolios</a></li>
+        <li><a href="profile.php"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
+        <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
     </nav>
-</header>
- 
-<div class="main-content">
+  </header>
+
+  <!-- Main Content Section -->
   <main>
     <!-- Filters Section -->
     <section class="filters">
@@ -100,30 +103,46 @@ $photos = fetchAllPhotosWithPhotographerNames($connection);
         </div>
       <?php endforeach; ?>
     </section>
-    <div class="review-form-container">
-  <form id="reviewForm" method="post" action="../functions/review.php">
-    <div class="form-group">
-      <label for="rating">Rating:</label>
-      <select id="rating" name="rating">
-        <option value="1">1 Star</option>
-        <option value="2">2 Stars</option>
-        <option value="3">3 Stars</option>
-        <option value="4">4 Stars</option>
-        <option value="5">5 Stars</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="comment">Comment:</label>
-      <textarea id="comment" name="comment" rows="4" placeholder="Enter your comment"></textarea>
-    </div>
-    <div class="form-group">
-      <button type="submit" class="submit-button">Submit Review</button>
-    </div>
-    <div id="reviewMessage" class="feedback-message"></div>
-  </form>
-</div>
 
+    <!-- Review Form Section -->
+    <div class="review-form-container">
+      <form id="reviewForm" style="display: none;" method="post" action="../functions/review.php">
+        <input type="hidden" id="photographerId" name="photographer_id">
+        <input type="hidden" id="imageId" name="image_id">
+        <label for="rating">Rating:</label>
+        <select id="rating" name="rating">
+          <option value="1">1 Star</option>
+          <option value="2">2 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="5">5 Stars</option>
+        </select>
+        <label for="comment">Comment:</label>
+        <textarea id="comment" name="comment" rows="4"></textarea>
+        <button type="submit">Submit Review</button>
+      </form>
+      <div id="reviewMessage" class="success-message" style="display: none;"></div>
+    </div>
   </main>
+
+  <!-- Footer Section -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-links">
+        <a href="#">About Us</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="social-icons">
+        <a href="#"><img src="facebook-icon.png" alt="Facebook"></a>
+        <a href="#"><img src="twitter-icon.png" alt="Twitter"></a>
+        <a href="#"><img src="instagram-icon.png" alt="Instagram"></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- External JavaScript -->
   <script src="../js/portfolio.js"></script>
-</div>         </body>
+</body>
 </html>
