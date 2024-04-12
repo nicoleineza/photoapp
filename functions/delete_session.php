@@ -7,8 +7,6 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: ../login/login.php");
     exit();
 }
-
-// Check if session ID is provided
 if (isset($_POST['sessionId'])) {
     $sessionId = $_POST['sessionId'];
 
@@ -24,8 +22,5 @@ if (isset($_POST['sessionId'])) {
     }
 
     $deletesession->close();
-} else {
-    // Session ID not provided
-    echo "Session ID not provided.";
-}
+} 
 ?>

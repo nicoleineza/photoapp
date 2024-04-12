@@ -1,15 +1,8 @@
 <?php
-session_start(); // Start the session
-
+session_start();
 include("../settings/auto.php");
-
-// Retrieve user ID from session
 $user_id = $_SESSION['user_id'];
-
-// Database connection
 include_once('../settings/config.php');
-
-// Retrieve user's information
 $sql_user_info = "SELECT * FROM Users WHERE user_id = ?";
 $stmt_user_info = $connection->prepare($sql_user_info);
 $stmt_user_info->bind_param("i", $user_id);
@@ -19,25 +12,32 @@ $result_user_info = $stmt_user_info->get_result();
 if ($result_user_info->num_rows > 0) {
     $user_info = $result_user_info->fetch_assoc();
 }
-
-// Fetch active sessions
 $current_date = date("Y-m-d");
 $sql_active_sessions = "SELECT s.session_id, s.session_name, s.description, s.date, s.location, s.price, u.username
                         FROM Sessions s
                         INNER JOIN Users u ON s.photographer_id = u.user_id
-                        WHERE s.status = 'open' 
+                        WHERE s.status = 'open'
                         AND s.date >= '$current_date'
-                        AND s.session_id NOT IN (SELECT session_id FROM Bookings WHERE user_id = $user_id)";
+                        AND s.session_id NOT IN (
+                            SELECT session_id FROM Bookings
+                        )";
+//filter function
+if (!empty($locationFilter)) {
+    $sql_active_sessions .= " AND s.location LIKE '%$locationFilter%'";
+}
+if (!empty($dateFilter)) {
+    $sql_active_sessions .= " AND s.date = '$dateFilter'";
+}
+if (!empty($priceMinFilter) && !empty($priceMaxFilter)) {
+    $sql_active_sessions .= " AND s.price BETWEEN $priceMinFilter AND $priceMaxFilter";
+}
 $result_active_sessions = $connection->query($sql_active_sessions);
-
-// Fetch booked sessions
 $sql_booked_sessions = "SELECT s.session_name, s.date, s.location, s.price, u.username, b.status, b.booking_id
                         FROM Sessions s
                         INNER JOIN Users u ON s.photographer_id = u.user_id
                         INNER JOIN Bookings b ON s.session_id = b.session_id
                         WHERE b.user_id = $user_id";
 $result_booked_sessions = $connection->query($sql_booked_sessions);
-//code to check if the user logged in is a photographer to display the create button
 $is_photographer = $user_info['user_type'] === 'photographer';
 ?>
 
@@ -51,7 +51,6 @@ $is_photographer = $user_info['user_type'] === 'photographer';
     <link rel="stylesheet" href="../css/sessions.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -63,34 +62,29 @@ $is_photographer = $user_info['user_type'] === 'photographer';
             overflow: auto;
             background-color: rgba(0, 0, 0, 0.4);
         }
-
         .modal-content {
             background-color: #fefefe;
             margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 80%;
+            width: 60%;
         }
-
         .close {
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
         }
-
         .close:hover,
         .close:focus {
             color: black;
             text-decoration: none;
             cursor: pointer;
         }
-
         .modal-buttons {
             margin-top: 20px;
             text-align: center;
         }
-
         button {
             margin-right: 10px;
         }
@@ -98,16 +92,15 @@ $is_photographer = $user_info['user_type'] === 'photographer';
 </head>
 <body>
     <div class="container">
-        <!-- Navigation -->
+        <!-- Navigation bar -->
         <nav class="side-nav">
-            <!-- User Profile -->
             <div class="user-profile">
                 <img src="../assets/profile.png" alt="Profile Picture" class="profile-picture">
                 <p class="username"><?php echo $user_info['username']; ?></p>
             </div>
             <!-- Navigation Links -->
             <ul>
-                <!--this line of code displays the create link if the user is a photographer-->
+                <!--this line of code displays the create link if the user is a photographer which leads them back to the photographer's dashboard-->
                 <?php if ($is_photographer): ?>
                     <li><a href="photographer.php?photographer" id="pdashboard"><i class="fas fa-plus-circle"></i> Create</a></button>
                 <?php endif; ?>
@@ -118,21 +111,12 @@ $is_photographer = $user_info['user_type'] === 'photographer';
                 <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>
-        <!-- Header -->
         <header>
             <div class="nav-left">
                 <h1><?php echo $user_info['username']; ?>!</h1>
             </div>
-            <!-- Search Box -->
-            <div class="search-box">
-                <form action="" method="GET">
-                    <input type="text" name="query" placeholder="Search photographers...">
-                    <button type="submit"><i class="fas fa-search"></i></button>
-                </form>
-            </div>
+            
         </header>
-
-        <!-- Main Content -->
         <div id="main-content">
             <!-- Active Sessions -->
             <div class="session-container">
@@ -185,7 +169,6 @@ $is_photographer = $user_info['user_type'] === 'photographer';
                     </table>
                 </div>
             </div>
-
             <!-- Booked Sessions -->
             <div class="session-container">
                 <h2>Sessions Booked by You</h2>
@@ -227,7 +210,6 @@ $is_photographer = $user_info['user_type'] === 'photographer';
             </div>
         </div>
     </div>
-
     <!-- Delete Confirmation Modal -->
     <div id="deleteConfirmationModal" class="modal">
         <div class="modal-content">
@@ -239,7 +221,6 @@ $is_photographer = $user_info['user_type'] === 'photographer';
             </div>
         </div>
     </div>
-
     <!-- Book Confirmation Modal -->
     <div id="bookConfirmationModal" class="modal">
         <div class="modal-content">
@@ -251,82 +232,6 @@ $is_photographer = $user_info['user_type'] === 'photographer';
             </div>
         </div>
     </div>
-
-    <!-- JavaScript -->
-    <script>
-        // Function to open the delete confirmation modal
-        function openDeleteModal(bookingId) {
-            var modal = document.getElementById("deleteConfirmationModal");
-            modal.style.display = "block";
-            // Set the booking ID to the data attribute of the modal
-            document.getElementById("confirmDelete").setAttribute("data-booking-id", bookingId);
-        }
-
-        // Function to open the book confirmation modal
-        function openBookModal(sessionId) {
-            var modal = document.getElementById("bookConfirmationModal");
-            modal.style.display = "block";
-            // Set the session ID to the data attribute of the modal
-            document.getElementById("confirmBook").setAttribute("data-session-id", sessionId);
-        }
-
-        // Function to close the modal
-        document.querySelectorAll(".close").forEach(function(closeButton) {
-            closeButton.onclick = function() {
-                var modal = this.parentElement.parentElement;
-                modal.style.display = "none";
-            }
-        });
-
-        // Function to handle deletion confirmation
-        document.getElementById("confirmDelete").onclick = function() {
-            var modal = document.getElementById("deleteConfirmationModal");
-            modal.style.display = "none";
-            var bookingId = this.getAttribute("data-booking-id");
-            // Send AJAX request to delete booking
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Reload the page or update UI as needed
-                    window.location.reload();
-                }
-            };
-            xhr.open("POST", "../functions/delete_booking.php", true);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("booking_id=" + bookingId);
-        }
-
-        // Function to handle cancellation of deletion
-        document.getElementById("cancelDelete").onclick = function() {
-            var modal = document.getElementById("deleteConfirmationModal");
-            modal.style.display = "none";
-        }
-
-        // Function to handle booking confirmation
-        document.getElementById("confirmBook").onclick = function() {
-            var modal = document.getElementById("bookConfirmationModal");
-            modal.style.display = "none";
-            var sessionId = this.getAttribute("data-session-id");
-            // Send AJAX request to book session
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Handle booking success
-                    alert("Session booked! Session ID: " + sessionId);
-                    // Reload the page or update UI as needed
-                    window.location.reload();
-                }
-            };
-            xhr.open("POST", "../functions/book_session.php", true);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("session_id=" + sessionId);
-        }
-
-        // Function to handle cancellation of booking
-        document.getElementById("cancelBook").onclick = function() {
-            var modal = document.getElementById("bookConfirmationModal");
-            modal.style.display = "none";
-        }
-    </script>
+    <script src="../js/sessions.js"></script>
 </body>
 </html>

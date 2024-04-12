@@ -89,7 +89,7 @@ header {
 
 .side-nav ul li {
   padding: 10px;
-  border-bottom: 1px solid #8b8888; /* Lighter grey */
+  border-bottom: 1px solid #8b8888; 
 }
 
 .side-nav ul li a {
@@ -99,7 +99,7 @@ header {
 }
 
 .side-nav ul li a:hover {
-  background-color: #454d55; /* Darker grey on hover */
+  background-color: #454d55; 
 }
 
 main {

@@ -75,34 +75,7 @@ $is_photographer = $user_info['user_type'] === 'photographer';
         <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
     </ul>
   </nav>
-
-
-  <!-- Main Content Section -->
   <main>
-    <!-- Filters Section -->
-    <section class="filters">
-      <label>Filter by:
-        <select id="filter">
-          <option value="all">All</option>
-          <option value="landscape">Landscape</option>
-          <option value="portrait">Portrait</option>
-          <option value="macro">Macro</option>
-          <!-- Add more options as needed -->
-        </select>
-      </label>
-    </section>
-
-    <!-- Sorting Section -->
-    <section class="sorting">
-      <label>Sort by:
-        <select id="sort">
-          <option value="popularity">Popularity</option>
-          <option value="date">Date</option>
-          <option value="rating">Rating</option>
-        </select>
-      </label>
-    </section>
-
     <!-- Portfolio Grid Section -->
     <section class="portfolio-grid" id="portfolioGrid">
       <?php foreach ($photos as $photo): ?>

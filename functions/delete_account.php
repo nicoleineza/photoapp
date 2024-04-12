@@ -10,15 +10,13 @@ try {
         $sql = "DELETE FROM Users WHERE user_id = :user_id";
 
         $delete = $connection->prepare($sql);
-
-        // Execute the query with parameters
         $delete->execute(array(':user_id' => $userIdToDelete));
 
         session_unset();
         session_destroy();
 
         header("Location: ../login/logout.php");
-        exit(); // 
+        exit(); 
     } else {
         echo "User not logged in.";
     }

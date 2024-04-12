@@ -1,19 +1,11 @@
 <?php
 session_start();
-
-// Predefined authentication code
-$authCode = "1234"; // Change this to your desired authentication code
-
-// Check if the form is submitted
+$authCode = "1234"; 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve the entered code from the form
     $enteredCode = $_POST["code"];
-
-    // Validate the entered code
     if ($enteredCode === $authCode) {
-        // Authentication successful, set session variable
         $_SESSION["authenticated"] = true;
-        header("Location: protected_page.php"); // Redirect to the protected page
+        header("Location: protected_page.php");
         exit();
     } else {
         $error = "Invalid code. Please try again.";

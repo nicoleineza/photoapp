@@ -19,7 +19,6 @@ if(isset($_POST['username'], $_POST['email'], $_POST['password'], $_POST['user_t
     }elseif(mysqli_num_rows($email_result) > 0){
         echo "Email already exists!";
     }else{
-        // Insert data into database
         $query = "INSERT INTO Users (username, email, password_hash, user_type) VALUES ('$username', '$email', '$password_hash', '$user_type')";
         if(mysqli_query($connection, $query)){
             echo "success"; 

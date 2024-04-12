@@ -1,0 +1,106 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Header Styles */
+.header {
+    background-image: url('../assets/header.webp');
+    background-size: cover;
+    background-position: center;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 100px 0;
+}
+
+.header-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* Main Content Section Styles */
+.main-content {
+    position: relative;
+    overflow: hidden; /* Ensure the video doesn't overflow */
+}
+
+#video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; 
+    object-fit: cover;
+}
+
+.features {
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background to improve readability */
+    padding: 50px 0;
+    margin-top: -100px; /* Adjust to align with the header */
+}
+
+.feature {
+    flex-basis: calc(50% - 40px);
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.feature h2 {
+    margin-top: 0;
+}
+
+/* Testimonial Section Styles */
+.testimonial {
+    position: relative;
+    overflow: hidden; /* Ensure the video doesn't overflow */
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background to improve readability */
+    padding: 50px 0;
+}
+
+#testimonial-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; 
+    object-fit: cover;
+}
+
+/* Footer Styles */
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 50px 0;
+    text-align: center;
+}

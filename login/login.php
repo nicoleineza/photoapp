@@ -1,3 +1,11 @@
+<?php
+if (isset($_SESSION['flash_message'])) {
+
+    echo '<div class="flash-message">' . $_SESSION['flash_message'] . '</div>';
+    
+    unset($_SESSION['flash_message']);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,12 +14,25 @@
     <title>Login Page</title>
     <link rel="icon" href="../assets/appicon.png">
     <link rel="stylesheet" href="../css/login.css">
+    <style>
+        .app-icon {
+            width: 50px; 
+            height: auto; 
+            position: absolute;
+            top: 20px; 
+            left: 20px; 
+        }
+    </style>
 </head>
 <body>
+<div class="header">
+        <img src="../assets/appicon.png" alt="App Icon" class="app-icon">
+        <h2>PhotoApp</h2>
+    </div>
 <div class="container">
     <div class="login-header">
         
-        <h2>LOGIN</h2>
+        <h2>Log In</h2>
     </div>
     <div class="login-box">
         <form action="../login/login_action.php" method="post" name="loginForm" id="loginForm" onsubmit="return validateForm()">

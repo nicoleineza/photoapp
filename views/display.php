@@ -1,3 +1,6 @@
+<?php
+include ("../settings/auto.php");
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

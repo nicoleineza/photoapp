@@ -103,7 +103,7 @@ header {
 
 .side-nav ul li a {
     text-decoration: none;
-    color: #ffffff; /* White text color */
+    color: #ffffff; 
     display: block;
     transition: color 0.3s;
 }
@@ -112,7 +112,6 @@ header {
     color: #007bff;
 }
 
-/* Main content */
 .main-content {
     padding: 20px;
     display: flex;
@@ -145,7 +144,6 @@ header {
     margin-top: 20px;
 }
 
-/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -181,8 +179,6 @@ header {
     text-decoration: none;
     cursor: pointer;
 }
-
-/* Media query for smaller screens */
 @media (max-width: 768px) {
     .main-content {
         margin-left: 0;

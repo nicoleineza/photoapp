@@ -16,8 +16,6 @@ if(isset($_POST['action'])) {
             case 'update_username':
                 if(isset($_POST['new_username'])) {
                     $newUsername = mysqli_real_escape_string($connection, $_POST['new_username']);
-
-                    // Check if the new username already exists
                     $query = "SELECT COUNT(*) AS count FROM Users WHERE username = '$newUsername'";
                     $result = mysqli_query($connection, $query);
                     $row = mysqli_fetch_assoc($result);
@@ -27,7 +25,7 @@ if(isset($_POST['action'])) {
                     }
 
                     $sql = "UPDATE Users SET username = '$newUsername' WHERE user_id = '$userId'";
-                    $message = "success"; // Return success directly
+                    $message = "success";
                 } else {
                     $message = "New username not provided!";
                 }
@@ -47,7 +45,7 @@ if(isset($_POST['action'])) {
                     }
 
                     $sql = "UPDATE Users SET email = '$newEmail' WHERE user_id = '$userId'";
-                    $message = "success"; // Return success directly
+                    $message = "success";
                 } else {
                     $message = "New email not provided!";
                 }
@@ -67,10 +65,9 @@ if(isset($_POST['action'])) {
 
                         // Verify old password
                         if(password_verify($oldPassword, $currentPasswordHash)) {
-                            // Hash and update new password
                             $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
                             $sql = "UPDATE Users SET password_hash = '$newPasswordHash' WHERE user_id = '$userId'";
-                            $message = "success"; // Return success directly
+                            $message = "success"; 
                         } else {
                             $message = "Old password is incorrect!";
                         }
@@ -86,7 +83,7 @@ if(isset($_POST['action'])) {
                 if(isset($_POST['new_user_type'])) {
                     $newUserType = mysqli_real_escape_string($connection, $_POST['new_user_type']);
                     $sql = "UPDATE Users SET user_type = '$newUserType' WHERE user_id = '$userId'";
-                    $message = "success"; // Return success directly
+                    $message = "success"; 
                 } else {
                     $message = "New user type not provided!";
                 }
@@ -96,13 +93,10 @@ if(isset($_POST['action'])) {
                 $message = "Invalid action!";
                 break;
         }
-
-        // Execute SQL query if action is valid
         if(isset($sql)) {
             if(mysqli_query($connection, $sql)) {
                 echo $message;
             } else {
-                // Log error
                 error_log("Error updating profile: " . mysqli_error($connection));
                 echo "Error updating profile. Please try again later.";
             }

@@ -16,18 +16,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['session_id'])) {
     $new_location = $_POST['new_location'];
     $new_price = $_POST['new_price'];
 
-    // Update the session with the new information
     $query = "UPDATE Sessions SET session_name=?, description=?, date=?, location=?, price=? WHERE session_id=?";
     $editsession = $connection->prepare($query);
-        // Bind parameters
+       
         $editsession->bind_param("ssssdi", $new_session_name, $new_description, $new_date, $new_location, $new_price, $session_id);
-        // Execute the query
+   
         if ($editsession->execute()) {
             echo "Session updated successfully.";
         } else {
             echo "Error updating session: " . $stmt->error;
         }
-        // Close statement
         $stmt->close();
     } 
     

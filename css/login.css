@@ -1,5 +1,5 @@
 body {
-    background-color: burlywood;
+    background-color: #343a40;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,7 +55,7 @@ button {
 }
 
 button:hover {
-    background-color: darkorange;
+    background-color: rgb(90, 26, 239);
 }
 
 p {

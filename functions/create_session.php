@@ -1,5 +1,5 @@
 <?php
-session_start(); // Start session to access session variables
+session_start(); 
 
 include("../settings/config.php");
 
@@ -31,8 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: ../views/photographer.php?error=1");
             exit();
         }
-
-        // Close statement
         $listing->close();
     }
 }

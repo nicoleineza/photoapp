@@ -33,8 +33,10 @@ if ($result_user_info->num_rows > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Picture</title>
+    <link rel="icon" href="../assets/appicon.png">
     <link rel="stylesheet" href="../css/picture.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
 </head>
 <body>
 <nav class="side-nav">
@@ -44,7 +46,7 @@ if ($result_user_info->num_rows > 0) {
         <p class="username"><?php echo $user_info['username']; ?></p>
     </div>
     <ul>
-                <li> <a href="photographer.php?photographer"id="pdashboard"><<i class="fas fa-plus-circle"></i>Create</a></li>
+                <li> <a href="photographer.php?photographer"id="pdashboard"><i class="fas fa-plus-circle"></i>Create</a></li>
 
                 <li><a href="pdashboard.php?page=pdashboard" id="pdashboard"><i class="fas fa-home"></i> Home</a></li>
                 <li><a href="portfolio.php?page=portfolio" id="portfolio"><i class="fas fa-camera"></i> Portfolios</a></li>

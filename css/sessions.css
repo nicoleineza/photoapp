@@ -1,4 +1,4 @@
-/* Resetting default browser styles */
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -9,10 +9,10 @@ body {
     font-family: Arial, sans-serif;
     overflow-x: hidden; 
     background-color: #f8f9fa;
-    color: #333; /* Default text color */
+    color: #333; 
 }
 
-/* Header */
+
 header {
     background-color: #343a40;
     color: #fff;
@@ -55,7 +55,7 @@ header {
 }
 
 .search-box button:hover {
-    background-color: #ff4500; /* Dark orange on hover */
+    background-color: #ff4500; 
 }
 
 /* Sidebar */
@@ -89,7 +89,7 @@ header {
 
 .side-nav ul li {
     padding: 10px;
-    border-bottom: 1px solid #8b8888; /* Lighter grey */
+    border-bottom: 1px solid #8b8888; 
 }
 
 .side-nav ul li a {
@@ -99,10 +99,10 @@ header {
 }
 
 .side-nav ul li a:hover {
-    background-color: #454d55; /* Darker grey on hover */
+    background-color: #454d55; 
 }
 
-/* Main content */
+
 #main-content {
     margin-left: 250px;
     padding: 20px;
@@ -123,14 +123,13 @@ table {
 
 th, td {
     padding: 8px;
-    border-bottom: 1px solid #f9b1b1; /* Light pink */
+    border-bottom: 1px solid #867e7e; 
 }
 
 th {
-    background-color: #f9b1b1; /* Light pink */
+    background-color: #867e7e; 
 }
 
-/* Responsive layout */
 @media (max-width: 768px) {
     .side-nav {
         width: 100%;

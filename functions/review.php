@@ -19,8 +19,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 VALUES (?, ?, ?, ?, ?)";
         $review = $connection->prepare($sql);
         $review->bind_param("iiiss", $reviewer_id, $photographer_id, $image_id, $rating, $comment);
-
-        // Execute the statement
         $success = $review->execute();
 
         if ($success) {

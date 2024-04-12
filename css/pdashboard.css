@@ -55,7 +55,7 @@ header {
 }
 
 .search-box button:hover {
-    background-color: #ff4500; /* Dark orange on hover */
+    background-color: #ff4500; 
 }
 
 /* Sidebar */
@@ -99,7 +99,7 @@ header {
 }
 
 .side-nav ul li a:hover {
-    background-color: #454d55; /* Darker grey on hover */
+    background-color: #043f7a; 
 }
 #content-container {
     margin-left: 250px; 
@@ -135,7 +135,6 @@ header {
     margin: 0;
 }
 
-/* Featured Photographers Section */
 .photographer {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -148,8 +147,6 @@ header {
 .photographer p {
     margin: 0;
 }
-
-/* Booked Sessions Section */
 .session {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
@@ -161,8 +158,6 @@ header {
 .session h3 {
     margin-top: 0;
 }
-
-/* Book Sessions Section */
 #book-sessions .btn {
     padding: 10px 20px;
     background-color: #007bff;
@@ -177,7 +172,6 @@ header {
     background-color: #0056b3;
 }
 
-/* Media queries (unchanged) */
 @media screen and (max-width: 768px) {
     .side-nav {
         width: 200px;

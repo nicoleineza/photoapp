@@ -18,12 +18,10 @@ $result_user_info = $stmt_user_info->get_result();
 if ($result_user_info->num_rows > 0) {
     $user_info = $result_user_info->fetch_assoc();
 } else {
+    $_SESSION['flash_message'] = 'you are not logged in';
     header("Location: login.php");
     exit();
 }
-
-// Fetch featured photographers
-// Check if search query is submitted
 if(isset($_GET['query'])) {
     $search_query = $_GET['query'];
 
@@ -36,7 +34,7 @@ if(isset($_GET['query'])) {
     $result_search_photographers = $stmt_search_photographers->get_result();
 } else {
     // Fetch featured photographers if no search query is submitted
-    $sql_featured_photographers = "SELECT * FROM Users WHERE user_type = 'photographer' ORDER BY RAND() LIMIT 3";
+    $sql_featured_photographers = "SELECT * FROM Users WHERE user_type = 'photographer' ORDER BY RAND() LIMIT 5";
     $result_featured_photographers = $connection->query($sql_featured_photographers);
 }
 
@@ -140,9 +138,10 @@ $is_photographer = $user_info['user_type'] === 'photographer';
             if ($result_search_photographers->num_rows > 0) {
                 while ($row_search_photographers = $result_search_photographers->fetch_assoc()) {
                     echo "<div class='photographer'>
-                            <p>{$row_search_photographers['username']}</p>
-                            <button class='book-session-btn' data-photographer-id='{$row_search_photographers['user_id']}'>Book Session</button>
-                          </div>";
+                    <p>{$row_search_photographers['username']}</p>
+                    <a href='../sessions.php?photographer_id={$row_search_photographers['user_id']}' class='book-session-btn' data-photographer-id='{$row_search_photographers['user_id']}'>Book Session</a>
+                </div>";
+                
                 }
             } else {
                 echo "<p>No photographers found.</p>";

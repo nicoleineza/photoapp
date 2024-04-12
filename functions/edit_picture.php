@@ -2,12 +2,10 @@
 session_start();
 include("../settings/config.php");
 
-// Function to sanitize input data
 function sanitize($data) {
     return htmlspecialchars(strip_tags(trim($data)));
 }
 
-// Function to validate if the logged-in user is the owner of the photo
 function validateOwnership($connection, $photo_id, $user_id) {
     $query = "SELECT * FROM Images WHERE id = ? AND photographer_id = ?";
     if ($stmt = $connection->prepare($query)) {
@@ -22,7 +20,6 @@ function validateOwnership($connection, $photo_id, $user_id) {
     }
 }
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo "You are not logged in.";
     exit();
@@ -30,11 +27,8 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Check if the form data is received via POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editPhotoId'])) {
     $photo_id = sanitize($_POST['editPhotoId']);
-
-    // Validate if the logged-in user is the owner of the photo
     $photo = validateOwnership($connection, $photo_id, $user_id);
 
     if (!$photo) {
@@ -42,11 +36,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editPhotoId'])) {
         exit();
     }
 
-    // Handle edit description
+    //  edit description
     if (isset($_POST['editDescription'])) {
         $description = sanitize($_POST['editDescription']);
 
-        // Update picture description in the database
+        // Update picture description 
         $query = "UPDATE Images SET productName = ? WHERE id = ?";
         if ($stmt = $connection->prepare($query)) {
             $stmt->bind_param("si", $description, $photo_id);
@@ -98,8 +92,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editPhotoId'])) {
             echo "Error preparing update statement.";
         }
     }
-
-    // Handle other actions as needed
 
 } else {
     echo "Invalid request.";

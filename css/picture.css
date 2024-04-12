@@ -85,7 +85,7 @@ header {
 .user-profile .username {
     font-size: 18px;
     font-weight: bold;
-    color: #ffffff; /* White text color */
+    color: #ffffff; 
 }
 
 .side-nav ul {
@@ -99,7 +99,7 @@ header {
 
 .side-nav ul li a {
     text-decoration: none;
-    color: #ffffff; /* White text color */
+    color: #ffffff; 
     display: block;
     transition: color 0.3s;
 }

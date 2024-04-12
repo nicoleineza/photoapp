@@ -7,9 +7,14 @@ include("../functions/booking_requests.php");
 include("../functions/fetch_reviews.php");
 
 if (!isset($_SESSION['user_id'])) {
-   
+    $_SESSION['flash_message'] = 'you are not logged in or your are not a photographer';   
     header("Location: ../login/login.php");
     exit();
+}
+if (isset($_SESSION['flash_message'])) {
+    echo '<div class="flash-message">' . $_SESSION['flash_message'] . '</div>';
+    
+    unset($_SESSION['flash_message']);
 }
 
 $photographer_id = $_SESSION['user_id'];
@@ -21,7 +26,6 @@ $photos = fetchPhotographerPhotos($connection, $photographer_id);
 $sessions = fetchPhotographerSessions($connection, $photographer_id);
 $user_id = $_SESSION['user_id'];
 
-// Retrieve user's information
 $sql_user_info = "SELECT * FROM Users WHERE user_id = ?";
 $stmt_user_info = $connection->prepare($sql_user_info);
 $stmt_user_info->bind_param("i", $user_id);
@@ -47,9 +51,15 @@ $is_photographer = $user_info['user_type'] === 'photographer';
     <link rel="icon" href="../assets/appicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
+<style>.flash-message {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+</style>
 <body>
- 
-">Dashboard</h1>
 <header>
     <div class="nav-left">
         <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
@@ -74,14 +84,10 @@ $is_photographer = $user_info['user_type'] === 'photographer';
     </ul>
     
 </nav>
-    
-    
-    <!-- Main Content -->
     <div class="container">
         <section id="bio" class="bio">
             <h2>Booking Requests</h2>
             <?php
-            // Fetch booking requests where the session was created by the logged-in photographer
             $bookingRequests = requests($connection, $photographer_id);
 
             if (!empty($bookingRequests)) {
@@ -93,8 +99,6 @@ $is_photographer = $user_info['user_type'] === 'photographer';
                         <p>Date: <?= $booking['date'] ?></p>
                         <p>Location: <?= $booking['location'] ?></p>
                         <p>Price: $<?= $booking['price'] ?></p>
-
-                        <!-- Form to change booking status -->
                         <form action="../functions/status.php" method="post" class="change-status-form">
                             <input type="hidden" name="booking_id" value="<?= $booking['booking_id'] ?>">
                             <select name="status">
@@ -113,8 +117,6 @@ $is_photographer = $user_info['user_type'] === 'photographer';
             }
             ?>
         </section>
-
-        <!-- Portfolio Section -->
         <section id="portfolio">
     <h2>Portfolio</h2>
     <a href="picture.php"><button id="addPhotoBtn">Add New Photo</button></a>
@@ -184,7 +186,6 @@ $is_photographer = $user_info['user_type'] === 'photographer';
             <?php
             // Check if sessions are available
             if (!empty($sessions)) {
-                // Iterate over sessions and display them
                 foreach ($sessions as $session) {
                     ?>
                     <div class="session-item" data-session-id="<?= $session['session_id'] ?>">
@@ -193,17 +194,14 @@ $is_photographer = $user_info['user_type'] === 'photographer';
                         <p>Location: <?= $session['location'] ?></p>
                         <p>Description: <?= $session['description'] ?></p>
                         <p>Price: $<?= $session['price'] ?></p>
-                        <!-- Add buttons to edit and delete session -->
                         <div class="buttons">
                             <button class="edit-session-btn" data-session-id="<?= $session['session_id'] ?>">Edit</button>
                             <button class="delete-session-btn" data-session-id="<?= $session['session_id'] ?>">Delete</button>
                         </div>
-                        <!-- Add more details as needed -->
                     </div>
                     <?php
                 }
             } else {
-                // If no sessions are found, display a message
                 echo "<p>No sessions found.</p>";
             }
             ?>
@@ -217,7 +215,6 @@ $is_photographer = $user_info['user_type'] === 'photographer';
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Edit Photo Details</h2>
-            <!-- Form for editing photo details -->
             <form id="editPhotoForm">
                 <input type="hidden" id="editPhotoId" name="editPhotoId">
                 <label for="editDescription">Description:</label><br>
@@ -239,7 +236,6 @@ $is_photographer = $user_info['user_type'] === 'photographer';
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Edit Session Details</h2>
-            <!-- Form for editing session details -->
             <form id="editSessionForm">
                 <input type="hidden" id="editSessionId" name="editSessionId">
                 <label for="editSessionDate">Date:</label><br>

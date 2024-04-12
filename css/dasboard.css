@@ -37,7 +37,7 @@ nav {
 }
 
 .nav-left nav ul li:last-child {
-    margin-right: 0; /* Remove margin from last li element */
+    margin-right: 0; 
 }
 
 .photographers-grid {
