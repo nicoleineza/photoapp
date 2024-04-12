@@ -6,11 +6,6 @@ include("../functions/fetch_photo.php");
 include("../functions/booking_requests.php");
 include("../functions/fetch_reviews.php");
 
-if (!isset($_SESSION['user_id'])) {
-    $_SESSION['flash_message'] = 'you are not logged in or your are not a photographer';   
-    header("Location: ../login/login.php");
-    exit();
-}
 if (isset($_SESSION['flash_message'])) {
     echo '<div class="flash-message">' . $_SESSION['flash_message'] . '</div>';
     
