@@ -22,13 +22,17 @@ $sql_active_sessions = "SELECT s.session_id, s.session_name, s.description, s.da
                             SELECT session_id FROM Bookings
                         )";
 //filter function
-if (!empty($locationFilter)) {
+if (!empty($_POST['location'])) {
+    $locationFilter = $_POST['location'];
     $sql_active_sessions .= " AND s.location LIKE '%$locationFilter%'";
 }
-if (!empty($dateFilter)) {
+if (!empty($_POST['date'])) {
+    $dateFilter = $_POST['date'];
     $sql_active_sessions .= " AND s.date = '$dateFilter'";
 }
-if (!empty($priceMinFilter) && !empty($priceMaxFilter)) {
+if (!empty($_POST['priceMin']) && !empty($_POST['priceMax'])) {
+    $priceMinFilter = $_POST['priceMin'];
+    $priceMaxFilter = $_POST['priceMax'];
     $sql_active_sessions .= " AND s.price BETWEEN $priceMinFilter AND $priceMaxFilter";
 }
 $result_active_sessions = $connection->query($sql_active_sessions);
@@ -51,6 +55,7 @@ $is_photographer = $user_info['user_type'] === 'photographer';
     <link rel="stylesheet" href="../css/sessions.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        /* Your CSS styles here */
         .modal {
             display: none;
             position: fixed;
@@ -102,7 +107,7 @@ $is_photographer = $user_info['user_type'] === 'photographer';
             <ul>
                 <!--this line of code displays the create link if the user is a photographer which leads them back to the photographer's dashboard-->
                 <?php if ($is_photographer): ?>
-                    <li><a href="photographer.php?photographer" id="pdashboard"><i class="fas fa-plus-circle"></i> Create</a></button>
+                    <li><a href="photographer.php?photographer" id="pdashboard"><i class="fas fa-plus-circle"></i> Create</a></li>
                 <?php endif; ?>
                 <li><a href="pdashboard.php?page=pdashboard" id="pdashboard"><i class="fas fa-home"></i> Home</a></li>
                 <li><a href="portfolio.php?page=portfolio" id="portfolio"><i class="fas fa-camera"></i> Portfolios</a></li>
@@ -115,7 +120,6 @@ $is_photographer = $user_info['user_type'] === 'photographer';
             <div class="nav-left">
                 <h1><?php echo $user_info['username']; ?>!</h1>
             </div>
-            
         </header>
         <div id="main-content">
             <!-- Active Sessions -->
@@ -147,7 +151,7 @@ $is_photographer = $user_info['user_type'] === 'photographer';
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="session-table-body">
                             <?php
                             if ($result_active_sessions->num_rows > 0) {
                                 while($row_active_sessions = $result_active_sessions->fetch_assoc()) {
@@ -233,5 +237,25 @@ $is_photographer = $user_info['user_type'] === 'photographer';
         </div>
     </div>
     <script src="../js/sessions.js"></script>
+    <script>
+        document.getElementById("filterBtn").addEventListener("click", function() {
+    var locationFilter = document.getElementById("location").value;
+    var dateFilter = document.getElementById("date").value;
+    var priceMinFilter = document.getElementById("priceMin").value;
+    var priceMaxFilter = document.getElementById("priceMax").value;
+    var currentDate = "<?php echo $current_date; ?>"; 
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "../functions/filter_sessions.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            document.getElementById("session-table-body").innerHTML = xhr.responseText;
+        }
+    };
+    xhr.send("location=" + locationFilter + "&date=" + dateFilter + "&priceMin=" + priceMinFilter + "&priceMax=" + priceMaxFilter + "&currentDate=" + currentDate); // Update this line
+});
+
+    </script>
 </body>
 </html>

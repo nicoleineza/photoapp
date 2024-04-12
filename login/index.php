@@ -28,7 +28,6 @@
             padding: 20px;
         }
         .header {
-            background-image: url('../assets/image.jpeg');
             background-size: cover;
             background-position: center;
             background-color: #333;
@@ -40,7 +39,7 @@
         .header-content {
             position: relative;
             z-index: 1;
-            color: brown;
+            color: white;
         }
         .main-content {
             position: relative;

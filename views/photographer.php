@@ -71,7 +71,7 @@ $is_photographer = $user_info['user_type'] === 'photographer';
     <div class="user-profile">
         <img src="../assets/profile.png" alt="Profile Picture" class="profile-picture">
         <p class="username"><?php echo $user_info['username']; ?></p>
-    </div><h3>Profesional Photographer</h3>
+    </div>
     <ul>
         <?php if ($is_photographer): ?>
             <li><a href="photographer.php?photographer" id="pdashboard"><i class="fas fa-plus-circle"></i> Create</a></button>
@@ -87,6 +87,7 @@ $is_photographer = $user_info['user_type'] === 'photographer';
     <div class="container">
         <section id="bio" class="bio">
             <h2>Booking Requests</h2>
+            <p>View people who have booked your sessions and you can confirm the booking or not</p>
             <?php
             $bookingRequests = requests($connection, $photographer_id);
 
@@ -113,12 +114,13 @@ $is_photographer = $user_info['user_type'] === 'photographer';
                     <?php
                 }
             } else {
-                echo "<p>No one has booked any of your sessions.</p>";
+                echo "<p>No one has booked any of your sessions yet.</p>";
             }
             ?>
         </section>
         <section id="portfolio">
     <h2>Portfolio</h2>
+    <p>Add pictures for our community to be able to discover what you do and appreciate!</p>
     <a href="picture.php"><button id="addPhotoBtn">Add New Photo</button></a>
     <div class="portfolio">
         <!-- Display fetched photos -->
@@ -143,10 +145,10 @@ $is_photographer = $user_info['user_type'] === 'photographer';
                     <p class="description"><?= $photo['productName'] ?></p>
                     <!-- Display sale status and price -->
                     <?php if ($photo['isForSale'] == 1): ?>
-                        <p>This product is for sale</p>
+                        <p>This picture  is for sale</p>
                         <p class="price">Price: $<?= $photo['productPrice'] ?></p>
                     <?php else: ?>
-                        <p>This product is not for sale</p>
+                        <p>This picture is not for sale</p>
                     <?php endif; ?>
                     <!-- Display average rating -->
                     <p>Average Rating: <?= number_format($averageRating, 1) ?></p>
@@ -182,6 +184,7 @@ $is_photographer = $user_info['user_type'] === 'photographer';
         <!-- Sessions Section -->
         <section id="sessions" class="session-listings">
             <h2>Session Listings</h2>
+            <p>Create slots for when you are available for picture sessions</p>
             <a href="addsession.php"><button id="addSessionBtn">Add New Session</button></a>
             <?php
             // Check if sessions are available
