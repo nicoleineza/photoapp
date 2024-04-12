@@ -36,10 +36,6 @@ $is_photographer = $user_info['user_type'] === 'photographer';
     <div class="nav-left">
         <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
     </div>
-    <div class="search-box">
-        <form action="" method="GET">
-            <input type="text" name="query" placeholder="Search photographers...">
-            <button type="submit"><i class="fas fa-search"></i></button>
         </form>
     </div>
 </header>
@@ -61,6 +57,7 @@ $is_photographer = $user_info['user_type'] === 'photographer';
     
 </nav>
 
+<div class="main-content">
 
 <div class="edit-profile-container">
     <h2>Edit Profile</h2>
@@ -117,12 +114,13 @@ $is_photographer = $user_info['user_type'] === 'photographer';
             </form>
         </div>
     </div>
-    <div id="edit_profile_message"></div> <!-- Message container -->
+    
+    <div id="edit_profile_message">
     <div class="delete-account">
         <button id="deleteUser">Delete Account</button>
     </div>
 </div>
-
+</div>
 <div id="deleteConfirmationModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>

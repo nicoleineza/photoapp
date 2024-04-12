@@ -9,18 +9,17 @@ body {
     font-family: Arial, sans-serif;
 }
 header {
-    background-color: burlywood;
+    background-color: #343a40;
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative; 
-    z-index: 2; 
 }
 
 .nav-left h1 {
     font-size: 18px;
     font-weight: bold;
+    color: #ffffff; /* White text color */
     display: flex;
     align-items: center;
 }
@@ -39,7 +38,7 @@ header {
 .search-box input[type="text"] {
     padding: 8px;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid #ced4da;
     margin-right: 10px;
 }
 
@@ -56,15 +55,18 @@ header {
     background-color: #0056b3;
 }
 
+/* Sidebar */
 .side-nav {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
     width: 250px;
-    background-color: burlywood;
+    background-color: #343a40;
     overflow-y: auto;
-    z-index: 1; 
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
 }
 
 .user-profile {
@@ -83,6 +85,7 @@ header {
 .user-profile .username {
     font-size: 18px;
     font-weight: bold;
+    color: #ffffff; /* White text color */
 }
 
 .side-nav ul {
@@ -91,12 +94,12 @@ header {
 
 .side-nav ul li {
     padding: 15px 20px;
-    border-bottom: 1px solid burlywood;
+    border-bottom: 1px solid #8b8888;
 }
 
 .side-nav ul li a {
     text-decoration: none;
-    color: #333;
+    color: #ffffff; /* White text color */
     display: block;
     transition: color 0.3s;
 }

@@ -35,6 +35,8 @@ $result_user_info = $stmt_user_info->get_result();
 if ($result_user_info->num_rows > 0) {
     $user_info = $result_user_info->fetch_assoc();
 }
+//code to check if the user logged in is a photographer to display the create button
+$is_photographer = $user_info['user_type'] === 'photographer';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,7 +49,7 @@ if ($result_user_info->num_rows > 0) {
 </head>
 <body>
   <header>
-    <div class="nav-left">
+    <!--<div class="nav-left">
         <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
     </div>
     <div class="search-box">
@@ -55,7 +57,7 @@ if ($result_user_info->num_rows > 0) {
             <input type="text" name="query" placeholder="Search photographers...">
             <button type="submit"><i class="fas fa-search"></i></button>
         </form>
-    </div>
+    </div>-->
   </header>
   <nav class="side-nav">
     <div class="user-profile">
@@ -63,11 +65,14 @@ if ($result_user_info->num_rows > 0) {
         <p class="username"><?php echo $user_info['username']; ?></p>
     </div>
     <ul>
-                <li><a href="pdashboard.php?page=pdashboard" id="pdashboard"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="portfolio.php?page=portfolio" id="portfolio"><i class="fas fa-camera"></i> Portfolios</a></li>
-                <li><a href="sessions.php?page=sessions" id="sessions"><i class="fas fa-check-circle"></i> Sessions</a></li>
-                <li><a href="profile.php?page=profile" id="profile"><i class="fas fa-user"></i> Profile</a></li>
-                <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        <?php if ($is_photographer): ?>
+            <li><a href="photographer.php?photographer" id="pdashboard"><i class="fas fa-plus-circle"></i> Create</a></button>
+        <?php endif; ?>
+        <li><a href="pdashboard.php?page=pdashboard" id="pdashboard"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="portfolio.php?page=portfolio" id="portfolio"><i class="fas fa-camera"></i> Portfolios</a></li>
+        <li><a href="sessions.php?page=sessions" id="sessions"><i class="fas fa-check-circle"></i> Sessions</a></li>
+        <li><a href="profile.php?page=profile" id="profile"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
     </ul>
   </nav>
 

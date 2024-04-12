@@ -6,9 +6,8 @@ include("../functions/fetch_photo.php");
 include("../functions/booking_requests.php");
 include("../functions/fetch_reviews.php");
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    // Redirect to login page if user is not logged in
+   
     header("Location: ../login/login.php");
     exit();
 }
@@ -20,6 +19,21 @@ $photos = fetchPhotographerPhotos($connection, $photographer_id);
 
 // Fetch sessions for the currently logged in photographer
 $sessions = fetchPhotographerSessions($connection, $photographer_id);
+$user_id = $_SESSION['user_id'];
+
+// Retrieve user's information
+$sql_user_info = "SELECT * FROM Users WHERE user_id = ?";
+$stmt_user_info = $connection->prepare($sql_user_info);
+$stmt_user_info->bind_param("i", $user_id);
+$stmt_user_info->execute();
+$result_user_info = $stmt_user_info->get_result();
+
+$user_info = [];
+if ($result_user_info->num_rows > 0) {
+    $user_info = $result_user_info->fetch_assoc();
+}
+//code to check if the user logged in is a photographer to display the create button
+$is_photographer = $user_info['user_type'] === 'photographer';
 
 ?>
 
@@ -34,69 +48,32 @@ $sessions = fetchPhotographerSessions($connection, $photographer_id);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-<h1 style="
-    font-size: 24px;
-    margin: 0; padding: 10px;
-    color: #fff;
-    font-weight: bold;
-    text-transform: uppercase;
-    background-color: #ff6f61;
-    text-align: center;
-    position: fixed; /* Make the <h1> fixed */
-    top: 0; /* Align it to the top */
-    left: 0; /* Align it to the left */
-    width: 100%; /* Make it full width */
-    z-index: 1000; 
+ 
 ">Dashboard</h1>
-    <header>
+<header>
+    <div class="nav-left">
+        <h1><img src="../assets/profile.png" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;"> <?php echo $user_info['username']; ?>!</h1>
+    </div>
+        </form>
+    </div>
+</header>
+<nav class="side-nav">
+    <div class="user-profile">
+        <img src="../assets/profile.png" alt="Profile Picture" class="profile-picture">
+        <p class="username"><?php echo $user_info['username']; ?></p>
+    </div><h3>Profesional Photographer</h3>
+    <ul>
+        <?php if ($is_photographer): ?>
+            <li><a href="photographer.php?photographer" id="pdashboard"><i class="fas fa-plus-circle"></i> Create</a></button>
+        <?php endif; ?>
+        <li><a href="pdashboard.php?page=pdashboard" id="pdashboard"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="picture.php?page=portfolio" id="portfolio"><i class="fas fa-camera"></i> Portfolios</a></li>
+        <li><a href="addsession.php?page=sessions" id="sessions"><i class="fas fa-check-circle"></i>Sessions</a></li>
+        <li><a href="profile.php?page=profile" id="profile"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
     
-        <?php        
-        // Check if user is logged in
-        if (isset($_SESSION['user_id'])) {
-            $photographer_id = $_SESSION['user_id'];
-            
-            // Query to fetch photographer's name based on user ID
-            $query = "SELECT username FROM Users WHERE user_id = ?";
-            $statement = $connection->prepare($query);
-            $statement->bind_param("i", $photographer_id);
-            $statement->execute();
-            $result = $statement->get_result();
-            
-            // Check if the query was successful and if the photographer's name is found
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                // Display the photographer's name
-                echo "<h1>" . $row['username'] . "</h1>";
-            } else {
-                // Display a default message if the photographer's name is not found
-                echo "<h1>Photographer Name</h1>";
-            }
-            
-            // Close the statement
-            $statement->close();
-        } else {
-            // Redirect to login page if user is not logged in
-            header("Location: ../login/login.php");
-            exit();
-        }
-        ?>
-        <p>Professional Photographer</p>
-    
-        <!-- Navigation Section -->
-        
-        <nav>
-        <ul>
-                <li> <a href="photographer.php?photographer"id="pdashboard"><i class="fas fa-plus-circle"></i>Create</a></li>
-                <li><a href="pdashboard.php?page=pdashboard" id="pdashboard"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="picture.php?page=portfolio" id="portfolio"><i class="fas fa-camera"></i> Add Pictures/a></li>
-                <li><a href="addsession.php?page=sessions" id="sessions"><i class="fas fa-check-circle"></i> Create Sessions</a></li>
-                <li><a href="profile.php?page=profile" id="profile"><i class="fas fa-user"></i> Profile</a></li>
-                <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
-            
-        </nav>
-    </header>
-    
+</nav>
     
     
     <!-- Main Content -->

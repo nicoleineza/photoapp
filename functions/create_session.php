@@ -37,6 +37,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-header("Location: photographer.php");
+header("Location: ../views/photographer.php");
 exit();
 ?>

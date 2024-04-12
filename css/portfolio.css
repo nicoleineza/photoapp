@@ -1,29 +1,37 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-}
-h* {
+/* Resetting default browser styles */
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+
 body {
   font-family: Arial, sans-serif;
-  background-color: burlywood;
+  overflow-x: hidden; 
+  background-color: #f8f9fa;
+  color: #333; /* Default text color */
 }
 
+/* Header */
 header {
-  background-color: burlywood;
-  padding: 15px 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #343a40;
+  color: #fff;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .nav-left h1 {
-  font-size: 18px;
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.nav-left h1 img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
 .search-box {
@@ -33,73 +41,67 @@ header {
 .search-box input[type="text"] {
   padding: 8px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: none;
   margin-right: 10px;
 }
 
 .search-box button {
   padding: 8px 12px;
+  background-color: #343a40;
   border: none;
-  background-color: #007bff;
-  color: #fff;
   border-radius: 5px;
+  color: #fff;
   cursor: pointer;
 }
 
 .search-box button:hover {
-  background-color: #0056b3;
-}
-.side-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 250px;
-  background-color: burlywood;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
+  background-color: #ff4500; /* Dark orange on hover */
 }
 
-.side-nav .user-profile {
+/* Sidebar */
+.side-nav {
+  width: 250px;
+  background-color: #343a40;
+  color: #fff;
+  position: fixed;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.user-profile {
   padding: 20px;
   text-align: center;
-  border-bottom: 1px solid #ccc;
 }
 
-.side-nav .user-profile img {
-  width: 80px;
-  height: 80px;
+.user-profile img {
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  margin-bottom: 10px;
 }
 
-.side-nav .user-profile .username {
-  font-size: 18px;
-  font-weight: bold;
+.username {
+  margin-top: 10px;
 }
 
 .side-nav ul {
-  list-style: none;
-  padding: 0;
+  list-style-type: none;
 }
 
 .side-nav ul li {
-  padding: 15px 20px;
-  border-bottom: 1px solid burlywood;
+  padding: 10px;
+  border-bottom: 1px solid #8b8888; /* Lighter grey */
 }
 
 .side-nav ul li a {
+  color: #fff;
   text-decoration: none;
-  color: #333333;
   display: block;
-  transition: color 0.3s;
 }
 
 .side-nav ul li a:hover {
-  color: #007bff;
+  background-color: #454d55; /* Darker grey on hover */
 }
+
 main {
   padding: 20px;
   margin-left: 250px;
@@ -179,6 +181,7 @@ main {
 .comments-button {
   background-color: #ded3cf;
 }
+
 .review-form-container {
   margin-top: 20px;
 }
@@ -230,4 +233,3 @@ main {
 .comments-container p:last-child {
   margin-bottom: 0;
 }
-

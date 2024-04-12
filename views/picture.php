@@ -57,7 +57,7 @@ if ($result_user_info->num_rows > 0) {
 
 <div id="content-wrapper">
     <h2>ADD PICTURE</h2>
-    <form id="productForm" action="upload_picture.php" method="post" enctype="multipart/form-data">
+    <form id="productForm" action="../functions/upload_picture.php" method="post" enctype="multipart/form-data">
         <label for="productName">Picture Description:</label><br>
         <input type="text" id="productName" name="productName" required><br><br>
 
