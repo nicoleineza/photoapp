@@ -28,6 +28,7 @@
             padding: 20px;
         }
         .header {
+            background-image: url('../assets/background.webp');
             background-size: cover;
             background-position: center;
             background-color: #333;
