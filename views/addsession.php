@@ -54,7 +54,7 @@ if ($result_user_info->num_rows > 0) {
 </nav>
 </nav>
 <div id="content-wrapper">
-        <h3> Add Session</h3>
+        <h3> Create a New Session</h3>
         <form action="../functions/create_session.php" method="post">
             <label for="session_name">Session Name:</label><br>
             <input type="text" id="session_name" name="session_name" required><br>
@@ -62,9 +62,9 @@ if ($result_user_info->num_rows > 0) {
             <textarea id="description" name="description" rows="4" cols="50" required></textarea><br>
             <label for="date">Date:</label><br>
             <input type="date" id="date" name="date" required><br>
-            <label for="location">Location:</label><br>
+            <label for="location">Enter Precise Location:</label><br>
             <input type="text" id="location" name="location" required><br>
-            <label for="price">Price:</label><br>
+            <label for="price">Price is in USD:</label><br>
             <input type="number" id="price" name="price" step="0.01" required><br>
             <input type="submit" value="Add Session">
         </form>

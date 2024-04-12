@@ -54,7 +54,7 @@
         </div>
         <button type="submit">Signup</button>
         <div id="signup_message"></div> 
-        <p>><a href="login.php">have ana account? click here to login</a></p>
+        <p>><a href="login.php">have an account? click here to login</a></p>
     </form>
 </div>
 </body>

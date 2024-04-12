@@ -44,7 +44,7 @@ if (isset($_SESSION['flash_message'])) {
             <br>
             <button type="submit" id="signInButton" name="signInButton">Sign In</button>
         </form>
-        <p><a href="signup.php">No account> click herer to Register</a></p>
+        <p><a href="signup.php">No account? click here to Register</a></p>
         <?php 
         if (isset($_GET['error']) && !empty($_GET['error'])) {
             $error_message = $_GET['error'];
